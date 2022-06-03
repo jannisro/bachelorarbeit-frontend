@@ -13,23 +13,30 @@
         :previousUrl="previousUrl"
         :nextUrl="nextUrl" />
 
-    <BarChart headline="Primary Enery Data" id="primaryEnergyData" :datasets="primaryEnergyData()" :options="primaryEnergyOptions()" />
-    <!--<BarChart headline="Commercial/Physical Exchange" id="secondaryEnergyData" />-->
+    <BarChart 
+        v-if="electricityData && weatherData"
+        headline="Primary Enery Data" 
+        id="primaryEnergyData" 
+        :datasets="primaryEnergyChartData" 
+        :options="primaryEnergyOptions()" />
 
-    <IndicatorElement :items="[]" />
+    <!--<IndicatorElement :items="[]" />
 
-    <ChartTabs :items="[{id: 'tab1', title: 'Test 1'}, {id: 'tab2', title: 'Test 2'}]" />
+    <ChartTabs :items="[{id: 'tab1', title: 'Test 1'}, {id: 'tab2', title: 'Test 2'}]" />-->
 
 </template>
 
 <script>
 import HeaderNavigation from '@/components/HeaderNavigation.vue'
-import validation from '@/services/validation.js'
+import validation from '@/services/validation'
 import DataNavigation from '@/components/DataNavigation.vue'
 import BarChart from '@/components/BarChart.vue'
-import IndicatorElement from '@/components/IndicatorElement.vue'
-import ChartTabs from '@/components/ChartTabs.vue'
-//import chartjs from 'chart.js/dist/chart.esm'
+/*import IndicatorElement from '@/components/IndicatorElement.vue'
+import ChartTabs from '@/components/ChartTabs.vue'*/
+import axios from 'axios/dist/axios'
+import urlBuilder from '@/services/urlBuilder'
+import chartOptions from '@/services/chartOptions'
+import chartData from '@/services/chartData'
 
 export default {
     name: 'NationalDataView',
@@ -40,8 +47,9 @@ export default {
             periodDisplayName: '',
             previousUrl: '',
             nextUrl: '',
-            electricityData: null,
-            weatherData: null
+            electricityData: false,
+            weatherData: false,
+            primaryEnergyChartData: {}
         }
     },
 
@@ -49,47 +57,36 @@ export default {
         HeaderNavigation,
         DataNavigation,
         BarChart,
-        IndicatorElement,
-        ChartTabs
+        /*IndicatorElement,
+        ChartTabs*/
     },
 
     methods: {
 
-        async fetchAndOutputData () {
-            await this.fetchData();
-        },
-
-
-        fetchData () {
-            const apiBase = `${process.env.VUE_APP_URL}`
-            const p = this.$route.params;
-            fetch(`${apiBase}/electricity/national/${p.countryCode}/${p.timePeriodName}/${p.date}`)
-                .then(response => response.json)
-                .then(data => { 
-                    this.periodDisplayName = data.time_period;
-                    this.electricityData = data.data;
-                });
-                
-            fetch(`${apiBase}/weather/national/${p.countryCode}/${p.timePeriodName}/${p.date}`)
-                .then(response => response.json)
-                .then(data => { 
-                    this.weatherData = data.data;
+        fetchAndOutputData () {
+            Promise.all([this.fetchElectricityData(), this.fetchWeatherData()])
+                .then(data => {
+                    this.electricityData = data[0];
+                    this.weatherData = data[1];
+                    this.primaryEnergyChartData = chartData.primaryEnergyChart(data[0].data);
                 });
         },
 
 
-        primaryEnergyData () {
-            return [
-                {
-                    label: 'Biomass',
-                    data: this.generationData.biomass.map(function (item) {return item.value}) // TODO
-                }
-            ];
+        async fetchElectricityData () {
+            let response = await axios.get(urlBuilder.nationalElectricityApi(this.$route.params));
+            return response.data;
+        },
+
+
+        async fetchWeatherData () {
+            let response = await axios.get(urlBuilder.weatherDataApi(this.$route.params));
+            return response.data;
         },
 
 
         primaryEnergyOptions () {
-
+            return chartOptions.primaryEnergyData();
         }
 
     },

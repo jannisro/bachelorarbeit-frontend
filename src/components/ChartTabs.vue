@@ -16,7 +16,7 @@
 
     <div class="tabs__content" v-for="item in items" :class="{ active: activeTab === item.id }" :key="item.id">
         {{ item.id }}
-        <BarChart :headline="false" :id="item.id" />
+        <BarChart headline="" :id="item.id" />
     </div>
 </template>
 
