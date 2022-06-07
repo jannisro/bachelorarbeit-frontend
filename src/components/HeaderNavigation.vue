@@ -78,7 +78,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 0.7rem 1rem;
-    background: @dark;
+    background: transparent;
 
     &--fixed {
         position: fixed;
@@ -118,6 +118,18 @@ export default {
     &__country {
         option {
             background: @dark;
+        }
+    }
+}
+
+
+html.light .header {
+    &__link {
+        color: #000;
+    }
+    &__country {
+        option {
+            background: @light;
         }
     }
 }

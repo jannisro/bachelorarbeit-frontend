@@ -4,25 +4,41 @@
         :countrySelectionVisible="true" 
         :selectedCountry="$route.params.countryCode" />
 
+        
+    <LoadingSpinner v-if="!viewLoaded" />
+
     <DataNavigation 
+        v-if="viewLoaded"
         :countryCodes="[$route.params.countryCode]" 
         :periodName="$route.params.timePeriodName"
         :date="$route.params.date"
         area="national"
         :periodDisplayName="periodDisplayName"
-        :previousUrl="previousUrl"
-        :nextUrl="nextUrl" />
+        :previousUrl="`/data/national/${$route.params.countryCode}/${$route.params.timePeriodName}/${previousStepDate}`"
+        :nextUrl="`/data/national/${$route.params.countryCode}/${$route.params.timePeriodName}/${nextStepDate}`" />
 
-    <BarChart 
-        v-if="electricityData && weatherData"
-        headline="Primary Enery Data" 
-        id="primaryEnergyData" 
-        :datasets="primaryEnergyChartData" 
-        :options="primaryEnergyOptions()" />
+    <BarChart
+        headline="Primary Energy Data" 
+        id="primaryEnergyData"
+        ref="primaryEnergyChart"
+        :viewLoaded="viewLoaded" />
 
-    <!--<IndicatorElement :items="[]" />
+    <BarChart
+        headline="Commercial/Physical Exchange" 
+        id="secondaryEnergyData"
+        ref="secondaryEnergyChart"
+        :viewLoaded="viewLoaded" />
 
-    <ChartTabs :items="[{id: 'tab1', title: 'Test 1'}, {id: 'tab2', title: 'Test 2'}]" />-->
+    <!--<IndicatorElement :items="[]" />-->
+
+    <ChartTabs ref="weatherChartTabs" :viewLoaded="viewLoaded" :items="[
+        {id: 'weatherOverview', title: 'Overall Deviation'}, 
+        {id: 'clouds', title: 'Clouds'}, 
+        {id: 'temperature', title: 'Temperature'}, 
+        {id: 'wind', title: 'Wind'}, 
+        {id: 'rain', title: 'Rain'}, 
+        {id: 'snow', title: 'Snow'}
+    ]" />
 
 </template>
 
@@ -31,25 +47,32 @@ import HeaderNavigation from '@/components/HeaderNavigation.vue'
 import validation from '@/services/validation'
 import DataNavigation from '@/components/DataNavigation.vue'
 import BarChart from '@/components/BarChart.vue'
-/*import IndicatorElement from '@/components/IndicatorElement.vue'
-import ChartTabs from '@/components/ChartTabs.vue'*/
+//import IndicatorElement from '@/components/IndicatorElement.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import ChartTabs from '@/components/ChartTabs.vue'
 import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
-import chartOptions from '@/services/chartOptions'
-import chartData from '@/services/chartData'
+import { useApiDataStore } from '@/stores/apiDataStore'
 
 export default {
     name: 'NationalDataView',
     metaInfo: 'Start',
 
+    setup() {
+        const store = useApiDataStore()
+        return {
+            store
+        }
+    },
+
     data () {
         return {
             periodDisplayName: '',
-            previousUrl: '',
-            nextUrl: '',
+            previousStepDate: '1',
+            nextStepDate: '1',
             electricityData: false,
             weatherData: false,
-            primaryEnergyChartData: {}
+            viewLoaded: false
         }
     },
 
@@ -57,18 +80,40 @@ export default {
         HeaderNavigation,
         DataNavigation,
         BarChart,
-        /*IndicatorElement,
-        ChartTabs*/
+        //IndicatorElement,
+        ChartTabs,
+        LoadingSpinner
     },
 
     methods: {
 
+
+        validateAndRender () {
+            const validCountry = validation.isValidCountry(this.$route.params.countryCode);
+            const validPeriodName = validation.isValidPeriodName(this.$route.params.timePeriodName);
+            const validDate = validation.isValidDate(this.$route.params.date);
+            (validCountry && validPeriodName && validDate) ? this.fetchAndOutputData() : this.$router.push('/');
+        },
+
+
         fetchAndOutputData () {
+            let $this = this;
+            const start = Date.now();
             Promise.all([this.fetchElectricityData(), this.fetchWeatherData()])
                 .then(data => {
-                    this.electricityData = data[0];
-                    this.weatherData = data[1];
-                    this.primaryEnergyChartData = chartData.primaryEnergyChart(data[0].data);
+                    if (data[0].country && data[0].time_period && data[0].data && data[1].data) {
+                        console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
+                        // Store meta data locally
+                        $this.periodDisplayName = data[0].time_period;
+                        $this.previousStepDate = data[0].previous_step;
+                        $this.nextStepDate = data[0].next_step;
+                        // Store response in pinia
+                        useApiDataStore.electricityData = data[0].data;
+                        useApiDataStore.weatherData = data[1].data;
+                        // Trigger chart rendering
+                        $this.render();
+                        $this.viewLoaded = true;
+                    }
                 });
         },
 
@@ -85,22 +130,33 @@ export default {
         },
 
 
-        primaryEnergyOptions () {
-            return chartOptions.primaryEnergyData();
+        render () {
+            const start = Date.now();
+            this.$refs.primaryEnergyChart.render();
+            this.$refs.secondaryEnergyChart.render();
+            this.$refs.weatherChartTabs.render()
+            console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
         }
 
     },
 
+
+    /**
+     * Initial rendering after component mount
+     */
     mounted () {
-        if (
-            validation.isValidCountry(this.$route.params.countryCode) 
-            && validation.isValidPeriodName(this.$route.params.timePeriodName)
-            && validation.isValidDate(this.$route.params.date)
-        ) {
-            this.fetchAndOutputData()
-        }
-        else {
-            this.$router.push('/');
+        this.validateAndRender()
+    },
+
+
+    /**
+     * React on page transition
+     */
+    watch: {
+        $route () {
+            window.scrollTo(0, 0);
+            this.viewLoaded = false;
+            this.validateAndRender()
         }
     }
 

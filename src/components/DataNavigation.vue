@@ -15,35 +15,35 @@
 
         <select class="data-control__select" v-model="countryUrlSegment">
             <option :value="startCountry">
-                <router-link :to="'/data/national/' + startCountry + '/' + periodName + '/' + date">
+                <router-link :to="`/data/national/${startCountry}/${periodName}/${date}`">
                     Nationwide
                 </router-link>
             </option>
-            <option v-for="border in borders" :key="border.code" :value="startCountry + '/' + border.code">
-                <router-link :to="'/data/international/' + startCountry + '/' + border.code + '/' + periodName + '/' + date">
+            <option v-for="border in borders" :key="border.code" :value="`${startCountry}/${border.code}`">
+                <router-link :to="`/data/international/${startCountry}/${border.code}/${periodName}/${date}`">
                     {{ startCountry }} &#129046; {{ border.name }}
                 </router-link>
             </option>
         </select>
 
-        <select class="data-control__select" v-model="periodNameModel">
+        <select class="data-control__select" v-model="periodNameModel" @change="redirectTimePeriod">
             <option value="day">
-                <router-link :to="'/data/' + area + '/' + countryUrlSegment + '/day/' + date">
+                <router-link :to="`/data/${area}/${countryUrlSegment}/day/${date}`">
                     Daily
                 </router-link>
             </option>
             <option value="week">
-                <router-link :to="'/data/' + area + '/' + countryUrlSegment + '/week/' + date">
+                <router-link :to="`/data/${area}/${countryUrlSegment}/week/${date}`">
                     Weekly
                 </router-link>
             </option>
             <option value="month">
-                <router-link :to="'/data/' + area + '/' + countryUrlSegment + '/month/' + date">
+                <router-link :to="`/data/${area}/${countryUrlSegment}/month/${date}`">
                     Monthly
                 </router-link>
             </option>
             <option value="year">
-                <router-link :to="'/data/' + area + '/' + countryUrlSegment + '/year/' + date">
+                <router-link :to="`/data/${area}/${countryUrlSegment}/year/${date}`">
                     Yearly
                 </router-link>
             </option>
@@ -56,6 +56,7 @@
 <script>
 export default {
     name: 'DataNavigation',
+
     data () {
         return {
             borders: [], // Available border relations, taken from API
@@ -65,6 +66,7 @@ export default {
             periodNameModel: '' // same as props.periodName
         };
     },
+
     props: {
         countryCodes: Array, // [DE], [FR], [AT, IT],  ...
         periodName: String, // day, week, month or year
@@ -74,6 +76,15 @@ export default {
         previousUrl: String, // http://localhost/...
         nextUrl: String // http://localhost/...
     },
+
+    methods: {
+
+        redirectTimePeriod () {
+            
+        }
+
+    },
+
     mounted () {
         this.periodNameModel = this.periodName;
         if (this.countryCodes.length === 1) {
@@ -89,10 +100,11 @@ export default {
             .then(response => response.json())
             .then(data => { this.borders = data.borders });
     }
+
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import '@/assets/less/setup.less';
 
 .data-control {

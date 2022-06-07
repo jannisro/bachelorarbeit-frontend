@@ -3,7 +3,7 @@
         {{ headline }}
     </h2>
 
-    <nav class="tabs">
+    <nav class="tabs" v-if="viewLoaded">
         <button 
                 class="tabs__trigger" 
                 v-for="item in items" 
@@ -15,8 +15,7 @@
     </nav>
 
     <div class="tabs__content" v-for="item in items" :class="{ active: activeTab === item.id }" :key="item.id">
-        {{ item.id }}
-        <BarChart headline="" :id="item.id" />
+        <BarChart :ref="item.id" :id="item.id" :viewLoaded="viewLoaded" />
     </div>
 </template>
 
@@ -37,13 +36,22 @@ export default {
     },
 
     props: {
-        items: Array
+        items: Array,
+        viewLoaded: Boolean
     },
 
     methods: {
 
         tabClicked (id) {
             this.activeTab = id;
+        },
+
+
+        render () {
+            let app = this;
+            this.items.forEach(item => {
+                app.$refs[item.id][0].render()
+            });
         }
     },
 
@@ -53,7 +61,7 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import '@/assets/less/setup';
 
 .tabs {
@@ -62,7 +70,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin-bottom: 1rem;
+    margin: 3rem 0;
 
     &__trigger {
         background: transparent;

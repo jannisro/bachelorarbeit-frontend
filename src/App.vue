@@ -1,7 +1,5 @@
 <template>
-    <div class="content">
-        <router-view/>
-    </div>
+    <router-view/>
 </template>
 
 <script>
@@ -35,8 +33,21 @@ export default {
     font-family: 'Source Sans Pro', sans-serif;
 }
 
-.content {
+html {
     background: @dark;
     color: @light;
+
+    /** {
+        color: @light;
+    }
+
+    &.light {
+        background: @light;
+        color: #000;
+
+        * {
+            color: #000;
+        }
+    }*/
 }
 </style>
