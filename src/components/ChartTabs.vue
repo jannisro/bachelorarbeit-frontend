@@ -70,7 +70,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin: 3rem 0;
+    margin: 3rem 3%;
 
     &__trigger {
         background: transparent;

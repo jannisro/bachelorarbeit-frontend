@@ -1,7 +1,7 @@
 <template>
-    <div class="chart">
+    <div class="chart" :class="{ 'invisible': !viewLoaded }">
         <h2 class="chart-headline" v-if="viewLoaded && headline">{{ headline }}</h2>
-        <canvas :id="id" :height="chartHeight" data-chart-canvas :class="{ 'invisible': !viewLoaded }"></canvas>
+        <canvas :id="id" :height="chartHeight" data-chart-canvas></canvas>
     </div>
 </template>
 
@@ -81,14 +81,17 @@ export default {
 .chart {
     width: 94%;
     margin: 0 0 4rem 3%;
+    background: rgba(255,255,255,0.06);
+    padding: 2rem 1.2rem;
+    border-radius: 20px;
+
+    &.invisible {
+        visibility: hidden;
+    }
 
     canvas {
         width: 100%;
         max-height: 70vh;
-
-        &.invisible {
-            visibility: hidden;
-        }
     }
 
     &-headline {

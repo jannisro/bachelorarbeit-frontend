@@ -1,6 +1,31 @@
 export default {
 
 
+    commonPluginSettings (hoverLabelPrefix) {
+        let $this = this;
+        let result = {
+            legend: {
+                labels: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                },
+                title: {
+                    color: 'rgba(255, 255, 255, 0.8)'
+                }
+            }
+        };
+        if (hoverLabelPrefix) {
+            result.tooltip = {
+                callbacks: {
+                    label: function(context) {
+                        return $this.tooltipLabelSuffix(context, hoverLabelPrefix);
+                    }
+                }
+            }
+        }
+        return result;
+    },
+
+
     tooltipLabelSuffix (context, suffix) {
         let label = context.dataset.label || '';
         if (label) {
@@ -15,6 +40,7 @@ export default {
 
     primaryEnergyData () {
         return {
+            plugins: this.commonPluginSettings(false),
             scales: {
                 xAxis: {
                     stacked: true,
@@ -66,21 +92,12 @@ export default {
 
 
     secondaryEnergyData () {
-        let $this = this;
         return {
             interaction: {
                 mode: 'index',
                 intersect: false
             },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, ' MW');
-                        }
-                    }
-                }
-            },
+            plugins: this.commonPluginSettings(' MW'),
             scales: {
                 xAxis: {
                     title: {    
@@ -105,21 +122,12 @@ export default {
 
 
     weatherOverview () {
-        let $this = this;
         return {
             interaction: {
                 mode: 'index',
                 intersect: false
             },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, '%');
-                        }
-                    }
-                }
-            },
+            plugins: this.commonPluginSettings(' %'),
             scales: {
                 xAxis: {
                     title: {    
@@ -144,17 +152,8 @@ export default {
 
 
     clouds () {
-        let $this = this;
         return {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, '%');
-                        }
-                    }
-                }
-            },
+            plugins: this.commonPluginSettings(' %'),
             scales: {
                 xAxis: {
                     title: {    
@@ -179,17 +178,8 @@ export default {
 
 
     temperature () {
-        let $this = this;
         return {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, ' °C');
-                        }
-                    }
-                }
-            },
+            plugins: this.commonPluginSettings(' °C'),
             scales: {
                 xAxis: {
                     title: {    
@@ -214,17 +204,8 @@ export default {
 
 
     wind () {
-        let $this = this;
         return {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, ' m/s');
-                        }
-                    }
-                }
-            },
+            plugins: this.commonPluginSettings(' m/s'),
             scales: {
                 xAxis: {
                     title: {    
@@ -249,17 +230,8 @@ export default {
 
 
     rain () {
-        let $this = this;
         return {
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, ' mm');
-                        }
-                    }
-                }
-            },
+            plugins: this.commonPluginSettings(' mm'),
             scales: {
                 xAxis: {
                     title: {    
@@ -290,20 +262,11 @@ export default {
 
 
     primaryBorderCrossingData () {
-        let $this = this;
         return {
+            plugins: this.commonPluginSettings(' MW'),
             interaction: {
                 mode: 'index',
                 intersect: false
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            return $this.tooltipLabelSuffix(context, ' MW');
-                        }
-                    }
-                }
             },
             scales: {
                 xAxis: {

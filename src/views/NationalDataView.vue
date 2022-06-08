@@ -4,11 +4,12 @@
         :countrySelectionVisible="true" 
         :selectedCountry="$route.params.countryCode" />
 
-    <h1 v-if="error">
-        {{ error }}
-    </h1>
+    <div v-if="error" class="flex-column align-items-center">
+        <h1 class="mt-5 mb-2">{{ error }}</h1>
+        <a href="" class="button">Retry</a>
+    </div>
         
-    <LoadingSpinner v-if="!viewLoaded" />
+    <LoadingSpinner v-if="!viewLoaded && !error" />
 
     <DataNavigation 
         v-if="viewLoaded"
@@ -75,7 +76,7 @@ export default {
             electricityData: false,
             weatherData: false,
             viewLoaded: false,
-            error: null
+            error: false
         }
     },
 
@@ -118,10 +119,10 @@ export default {
                         $this.viewLoaded = true;
                     }
                     else {
-                        this.error = "Received invalid response from server!";
-                        this.viewLoaded = true;
+                        $this.showError('Received invalid response from server!')
                     }
-                });
+                })
+                .catch(() => { $this.showError('An Error occurred while fetching data!') });
         },
 
 
@@ -143,6 +144,11 @@ export default {
             this.$refs.secondaryEnergyChart.render();
             this.$refs.weatherChartTabs.render()
             console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
+        },
+
+
+        showError (message) {
+            this.error = message;
         }
 
     },
@@ -170,6 +176,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-
+<style lang="less">
+@import '@/assets/less/setup';
+@import '@/assets/less/utils';
+@import '@/assets/less/button';
 </style>

@@ -111,10 +111,10 @@ export default {
                         $this.viewLoaded = true;
                     }
                     else {
-                        this.error = "Received invalid response from server!";
-                        this.viewLoaded = true;
+                        $this.showError('Received invalid response from server!')
                     }
-                });
+                })
+                .catch(() => { $this.showError('An Error occurred while fetching data!') });
         },
 
 
@@ -141,6 +141,11 @@ export default {
             this.$refs.primaryBorderCrossingData.render();
             this.$refs.reversedBorderCrossingData.render();
             console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
+        },
+
+
+        showError (message) {
+            this.error = message;
         }
 
     },
@@ -168,6 +173,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-
+<style lang="less">
+@import '@/assets/less/setup';
+@import '@/assets/less/utils';
+@import '@/assets/less/button';
 </style>

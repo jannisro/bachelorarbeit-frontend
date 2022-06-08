@@ -1,6 +1,6 @@
 <template>
  <nav class="data-control">
-    <div class="data-control__element">
+    <div class="flex align-items-center">
         <router-link :to="previousUrl" class="data-control__arrow">
             <img src="@/assets/img/left.svg" alt="Previous">
         </router-link>
@@ -129,7 +129,8 @@ export default {
 </script>
 
 <style lang="less">
-@import '@/assets/less/setup.less';
+@import '@/assets/less/setup';
+@import '@/assets/less/utils';
 
 .data-control {
     width: 94%;
@@ -140,11 +141,6 @@ export default {
     align-items: center;
     color: @light;
     margin: 2.3rem 0 2.3rem 3%;
-
-    &__element {
-        display: flex;
-        align-items: flex-end;
-    }
 
     &__arrow {
         background: none;
@@ -163,8 +159,10 @@ export default {
     }
 
     &__datepicker {
+        background-color: rgba(255, 255, 255, 0.06) !important;
         font-size: 1.34rem !important;
         border: none !important;
+        border-radius: 10px !important;
     }
 
     &__select {
