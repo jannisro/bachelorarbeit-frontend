@@ -286,6 +286,50 @@ export default {
 
     snow () {
         return this.rain;
+    },
+
+
+    primaryBorderCrossingData () {
+        let $this = this;
+        return {
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return $this.tooltipLabelSuffix(context, ' MW');
+                        }
+                    }
+                }
+            },
+            scales: {
+                xAxis: {
+                    title: {    
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                yAxis: {
+                    title: {
+                        text: 'MW',
+                        display: true
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return value + ' MW';
+                        }
+                    }
+                }
+            }
+        }
+    },
+
+
+    reversedBorderCrossingData () {
+        return this.primaryBorderCrossingData();
     }
 
 }

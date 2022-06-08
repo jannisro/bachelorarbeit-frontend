@@ -4,48 +4,42 @@
         <router-link :to="previousUrl" class="data-control__arrow">
             <img src="@/assets/img/left.svg" alt="Previous">
         </router-link>
-        <p class="data-control__text">
-            {{ periodDisplayName }}
-        </p>
+        <div>
+            <Datepicker 
+                    v-model="dateModel" 
+                    :enableTimePicker="false" 
+                    :placeholder="periodName" 
+                    format="yyyy-MM-dd" 
+                    :autoApply="true" 
+                    :hideInputIcon="true"
+                    inputClassName="data-control__datepicker"
+                    :dark="true"
+                    @update:modelValue="redirectDataView" />
+        </div>
         <router-link :to="nextUrl" class="data-control__arrow">
             <img src="@/assets/img/right.svg" alt="Next">
         </router-link>
     </div>
     <div>
 
-        <select class="data-control__select" v-model="countryUrlSegment">
+        <select class="data-control__select" v-model="borderRelationModel" @change="redirectBorderRelation">
             <option :value="startCountry">
-                <router-link :to="`/data/national/${startCountry}/${periodName}/${date}`">
-                    Nationwide
-                </router-link>
+                Nationwide
             </option>
-            <option v-for="border in borders" :key="border.code" :value="`${startCountry}/${border.code}`">
-                <router-link :to="`/data/international/${startCountry}/${border.code}/${periodName}/${date}`">
-                    {{ startCountry }} &#129046; {{ border.name }}
-                </router-link>
+            <option v-for="border in borders" :key="border.code" :value="border.code">
+                {{ startCountry }} &#10231; {{ border.name }}
             </option>
         </select>
 
-        <select class="data-control__select" v-model="periodNameModel" @change="redirectTimePeriod">
+        <select class="data-control__select" v-model="periodNameModel" @change="redirectDataView">
             <option value="day">
-                <router-link :to="`/data/${area}/${countryUrlSegment}/day/${date}`">
-                    Daily
-                </router-link>
-            </option>
-            <option value="week">
-                <router-link :to="`/data/${area}/${countryUrlSegment}/week/${date}`">
-                    Weekly
-                </router-link>
+                Daily
             </option>
             <option value="month">
-                <router-link :to="`/data/${area}/${countryUrlSegment}/month/${date}`">
-                    Monthly
-                </router-link>
+                Monthly
             </option>
             <option value="year">
-                <router-link :to="`/data/${area}/${countryUrlSegment}/year/${date}`">
-                    Yearly
-                </router-link>
+                Yearly
             </option>
         </select>
 
@@ -54,16 +48,23 @@
 </template>
 
 <script>
+import urlBuilder from '@/services/urlBuilder';
+import Datepicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
+
 export default {
     name: 'DataNavigation',
+
+    components: { Datepicker },
 
     data () {
         return {
             borders: [], // Available border relations, taken from API
             startCountry: null, // Code of the origin country
             endCountry: null, // Code of the target country if existing
-            countryUrlSegment: null, // startCountry or 'startCountry/endCountry'
-            periodNameModel: '' // same as props.periodName
+            borderRelationModel: null, // targetCountry
+            periodNameModel: '', // same as props.periodName
+            dateModel: null // same as props.date
         };
     },
 
@@ -71,7 +72,6 @@ export default {
         countryCodes: Array, // [DE], [FR], [AT, IT],  ...
         periodName: String, // day, week, month or year
         date: String, // 2022-01-01, ...
-        area: String, // national or international
         periodDisplayName: String, // January 2022, Week 42/2022, ...
         previousUrl: String, // http://localhost/...
         nextUrl: String // http://localhost/...
@@ -79,23 +79,47 @@ export default {
 
     methods: {
 
-        redirectTimePeriod () {
-            
+        redirectDataView () {
+            this.$router.push(urlBuilder.getDataUrl(this.countryCodes, this.periodNameModel, this.dateModel));
+        },
+
+
+        redirectBorderRelation () {
+            // Switch to national mode
+            if (this.borderRelationModel === this.startCountry) {
+                this.$router.push(
+                    urlBuilder.getDataUrl(
+                        [this.startCountry], 
+                        this.periodName, 
+                        this.date
+                    )
+                );
+            }
+            // Switch to international mode
+            else {
+                this.$router.push(
+                    urlBuilder.getDataUrl(
+                        [this.startCountry, this.borderRelationModel], 
+                        this.periodName, 
+                        this.date
+                    )
+                );
+            }
         }
 
     },
 
     mounted () {
         this.periodNameModel = this.periodName;
+        this.dateModel = this.date;
         if (this.countryCodes.length === 1) {
-            this.startCountry = this.countryUrlSegment = this.countryCodes[0];
+            this.startCountry = this.borderRelationModel = this.countryCodes[0];
         }
         else if(this.countryCodes.length === 2) {
             this.startCountry = this.countryCodes[0];
             this.endCountry = this.countryCodes[1];
-            this.countryUrlSegment = `${this.countryCodes[0]}/${this.countryCodes[1]}`;
+            this.borderRelationModel = this.countryCodes[1];
         }
-
         fetch(`${process.env.VUE_APP_API_URL}/country/${this.countryCodes[0]}/borders`)
             .then(response => response.json())
             .then(data => { this.borders = data.borders });
@@ -138,8 +162,9 @@ export default {
         }
     }
 
-    &__text {
-        font-size: 1.4rem;
+    &__datepicker {
+        font-size: 1.34rem !important;
+        border: none !important;
     }
 
     &__select {

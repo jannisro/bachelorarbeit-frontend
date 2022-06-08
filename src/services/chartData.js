@@ -379,6 +379,48 @@ export default {
             datasets: datasets,
             labels: labels
         };
+    },
+
+
+    primaryBorderCrossingData (apiDataStore) {
+        return this.internationalEnergyChart(apiDataStore.mainDirectionData);
+    },
+
+
+    reversedBorderCrossingData (apiDataStore) {
+        return this.internationalEnergyChart(apiDataStore.reverseDirectionData);
+    },
+
+
+    internationalEnergyChart (chartData) {
+        let datasets = [];
+        if (chartData.commercial_flow && chartData.physical_flow && chartData.net_transfer_capacity) {
+            datasets.push({
+                label: 'Commercial Flow',
+                type: 'line',
+                data: chartData.commercial_flow.map(item => { return item.value; }),
+                backgroundColor: this.mainColors.green,
+                borderColor: this.mainColors.green
+            });
+            datasets.push({
+                label: 'Physcial Flow',
+                type: 'line',
+                data: chartData.physical_flow.map(item => { return item.value; }),
+                backgroundColor: this.mainColors.red,
+                borderColor: this.mainColors.red
+            });
+            datasets.push({
+                label: 'Net Transfer Capacity',
+                type: 'line',
+                data: chartData.net_transfer_capacity.map(item => { return item.value; }),
+                backgroundColor: this.mainColors.yellow,
+                borderColor: this.mainColors.yellow
+            });
+        }
+        return {
+            datasets: datasets,
+            labels: chartData.commercial_flow.map(item => { return item.dt })
+        }
     }
 
 }

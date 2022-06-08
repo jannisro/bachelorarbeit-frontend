@@ -10,6 +10,7 @@ import StartMap from '@/components/StartMap.vue'
 export default {
     name: 'StartView',
     metaInfo: 'Start',
+
     components: {
         HeaderNavigation,
         StartMap,

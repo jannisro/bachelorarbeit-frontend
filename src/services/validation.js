@@ -14,7 +14,7 @@ export default {
 
 
     isValidDate (dateString) {
-        return dateString.match(/\d\d\d\d-\d\d-\d\d/gi)
+        return dateString ? dateString.match(/\d\d\d\d-\d\d-\d\d/gi) : false;
     }
 
 }

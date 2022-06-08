@@ -54,7 +54,13 @@ export default {
     methods: {
 
         redirectCountry () {
-            this.$router.push(urlBuilder.nationalDataUrl(this.selectedCountryCode, 'day', new Date()))
+            let date = new Date();
+            let periodName = 'day';
+            if (this.$route.params.timePeriodName && this.$route.params.date) {
+                date = this.$route.params.date
+                periodName = this.$route.params.timePeriodName
+            }
+            this.$router.push(urlBuilder.getDataUrl([this.selectedCountryCode], periodName, date))
         }
 
     },

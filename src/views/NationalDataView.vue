@@ -4,6 +4,9 @@
         :countrySelectionVisible="true" 
         :selectedCountry="$route.params.countryCode" />
 
+    <h1 v-if="error">
+        {{ error }}
+    </h1>
         
     <LoadingSpinner v-if="!viewLoaded" />
 
@@ -12,7 +15,6 @@
         :countryCodes="[$route.params.countryCode]" 
         :periodName="$route.params.timePeriodName"
         :date="$route.params.date"
-        area="national"
         :periodDisplayName="periodDisplayName"
         :previousUrl="`/data/national/${$route.params.countryCode}/${$route.params.timePeriodName}/${previousStepDate}`"
         :nextUrl="`/data/national/${$route.params.countryCode}/${$route.params.timePeriodName}/${nextStepDate}`" />
@@ -72,7 +74,8 @@ export default {
             nextStepDate: '1',
             electricityData: false,
             weatherData: false,
-            viewLoaded: false
+            viewLoaded: false,
+            error: null
         }
     },
 
@@ -113,6 +116,10 @@ export default {
                         // Trigger chart rendering
                         $this.render();
                         $this.viewLoaded = true;
+                    }
+                    else {
+                        this.error = "Received invalid response from server!";
+                        this.viewLoaded = true;
                     }
                 });
         },

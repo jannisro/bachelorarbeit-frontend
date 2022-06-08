@@ -1,14 +1,14 @@
 export default {
 
-    nationalDataUrl (countryCode, periodName, date) {
-        return `/data/national/${countryCode}/${periodName}/${this.getFormattedDate(date)}`;
+    getDataUrl (countryCodes, periodName, date) {
+        const dateSegment = (typeof date === 'string') ? date : this.getFormattedDate(date);
+        if (countryCodes.length === 1) {
+            return `/data/national/${countryCodes[0]}/${periodName}/${dateSegment}`;
+        }
+        else if (countryCodes.length > 1) {
+            return `/data/international/${countryCodes[0]}/${countryCodes[1]}/${periodName}/${dateSegment}`;
+        }
     },
-
-    
-    internationalDataUrl (countryCodes, periodName, date) {
-        return `/data/international/${countryCodes[0]}/${countryCodes[1]}/${periodName}/${this.getFormattedDate(date)}`;
-    },
-
 
     nationalElectricityApi(routeParams) {
         const base = `${process.env.VUE_APP_API_URL}/electricity/national`;
@@ -18,7 +18,7 @@ export default {
 
     internationalElectricityApi(routeParams) {
         const base = `${process.env.VUE_APP_API_URL}/electricity/international`;
-        return `${base}/${routeParams.startCountry}/${routeParams.endCountry}/${routeParams.timePeriodName}/${routeParams.date}`
+        return `${base}/${routeParams.startCountryCode}/${routeParams.endCountryCode}/${routeParams.timePeriodName}/${routeParams.date}`
     },
 
 
@@ -29,8 +29,9 @@ export default {
 
 
     getFormattedDate (date) {
+        if (!(date instanceof Date)) date = new Date(date);
         const month = (date.getMonth()+1).toString().padStart(2, '0');
-        const day = date.getDay().toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
         return `${date.getFullYear()}-${month}-${day}`;
     }
 
