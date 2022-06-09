@@ -13,8 +13,24 @@
 
 
 <script>
+import { useApiDataStore } from '@/stores/apiDataStore';
+
 export default {
-    name: 'IndicatorElement',
+    name: 'IndicatorList',
+
+    setup () {
+        const store = useApiDataStore();
+        return {
+            store
+        }
+    },
+
+    data () {
+        return {
+            items: []
+        }
+    },
+
     props: {
         indicators: Array
     }

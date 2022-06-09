@@ -17,8 +17,8 @@
         :periodName="$route.params.timePeriodName"
         :date="$route.params.date"
         :periodDisplayName="periodDisplayName"
-        :previousUrl="`/data/national/${$route.params.countryCode}/${$route.params.timePeriodName}/${previousStepDate}`"
-        :nextUrl="`/data/national/${$route.params.countryCode}/${$route.params.timePeriodName}/${nextStepDate}`" />
+        :previousUrl="previousStepUrl"
+        :nextUrl="nextStepUrl" />
 
     <BarChart
         headline="Primary Energy Data" 
@@ -59,7 +59,6 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import ChartTabs from '@/components/ChartTabs.vue'
 import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
-import { useApiDataStore } from '@/stores/apiDataStore'
 import SupportModal from '@/components/SupportModal.vue'
 import'tooltipper/tooltipper'
 import chartExplanations from '@/services/chartExplanations'
@@ -68,20 +67,13 @@ export default {
     name: 'NationalDataView',
     metaInfo: 'Start',
 
-    setup() {
-        const store = useApiDataStore()
-        return {
-            store
-        }
-    },
-
     data () {
         return {
             periodDisplayName: '',
-            previousStepDate: '1',
-            nextStepDate: '1',
-            electricityData: false,
-            weatherData: false,
+            previousStepUrl: '',
+            nextStepDate: '',
+            electricityData: null,
+            weatherData: null,
             viewLoaded: false,
             error: false
         }
@@ -113,24 +105,10 @@ export default {
             const start = Date.now();
             Promise.all([this.fetchElectricityData(), this.fetchWeatherData()])
                 .then(data => {
-                    if (data[0].country && data[0].time_period && data[0].data && data[1].data) {
-                        console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
-                        // Store meta data locally
-                        $this.periodDisplayName = data[0].time_period;
-                        $this.previousStepDate = data[0].previous_step;
-                        $this.nextStepDate = data[0].next_step;
-                        // Store response in pinia
-                        useApiDataStore.electricityData = data[0].data;
-                        useApiDataStore.weatherData = data[1].data;
-                        // Trigger chart rendering
-                        $this.render();
-                        $this.viewLoaded = true;
-                    }
-                    else {
-                        $this.showError('Received invalid response from server!')
-                    }
+                    console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
+                    $this.handleApiResponse(data);
                 })
-                .catch(() => { $this.showError('An Error occurred while fetching data!') });
+                .catch((e) => { console.log(e); $this.showError('An Error occurred while fetching data!') });
         },
 
 
@@ -148,9 +126,9 @@ export default {
 
         render () {
             const start = Date.now();
-            this.$refs.primaryEnergyChart.render();
-            this.$refs.secondaryEnergyChart.render();
-            this.$refs.weatherChartTabs.render()
+            this.$refs.primaryEnergyChart.render(this.electricityData);
+            this.$refs.secondaryEnergyChart.render(this.electricityData);
+            this.$refs.weatherChartTabs.render(this.weatherData)
             console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
         },
 
@@ -162,6 +140,38 @@ export default {
 
         showSupportModal (chartId) {
             this.$refs.supportModal.show(chartExplanations[chartId]());
+        },
+
+
+        handleApiResponse (data) {
+            const isValidMetaData = data[0].country && data[0].time_period && data[0].previous_step && data[0].next_step;
+            const isValidChartData = data[0].data && data[1].data;
+            if (isValidMetaData && isValidChartData) {
+                this.storeResponseData(data);
+                this.render();
+                this.viewLoaded = true;
+            }
+            else {
+                this.showError('Received invalid response from server!')
+            }
+        },
+
+
+        storeResponseData (data) {
+            this.periodDisplayName = data[0].time_period;
+            this.previousStepUrl = this.siblingViewUrl(data[0].previous_step);
+            this.nextStepUrl = this.siblingViewUrl(data[0].next_step);
+            this.electricityData = data[0].data;
+            this.weatherData = data[1].data;
+        },
+
+
+        siblingViewUrl (date) {
+            return urlBuilder.getDataUrl(
+                [this.$route.params.countryCode],
+                this.$route.params.timePeriodName,
+                date
+            );
         }
 
     },

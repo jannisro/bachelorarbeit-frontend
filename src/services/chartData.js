@@ -32,8 +32,7 @@ export default {
     ],
 
 
-    primaryEnergyData (apiDataStore) {
-        const electricityData = apiDataStore.electricityData;
+    primaryEnergyData (electricityData) {
         let datasets = [];
         let labels = []
         if (electricityData.generation && electricityData.load && electricityData.net_position && electricityData.price) {
@@ -109,8 +108,7 @@ export default {
     },
 
 
-    secondaryEnergyData (apiDataStore) {
-        const electricityData = apiDataStore.electricityData;
+    secondaryEnergyData (electricityData) {
         let datasets = [];
         let labels = []
         if (electricityData.physical_flow && electricityData.commercial_flow) {
@@ -141,8 +139,7 @@ export default {
     },
 
 
-    weatherOverview (apiDataStore) {
-        const weatherData = apiDataStore.weatherData;
+    weatherOverview (weatherData) {
         let datasets = [];
         let labels = [];
         if (weatherData.stations && weatherData.overall) {
@@ -197,8 +194,7 @@ export default {
     },
 
 
-    clouds (apiDataStore) {
-        const weatherData = apiDataStore.weatherData;
+    clouds (weatherData) {
         let datasets = [];
         let labels = [];
         let $this = this;
@@ -234,8 +230,7 @@ export default {
     },
 
 
-    temperature (apiDataStore) {
-        const weatherData = apiDataStore.weatherData;
+    temperature (weatherData) {
         let datasets = [];
         let labels = [];
         let $this = this;
@@ -271,8 +266,7 @@ export default {
     },
 
 
-    wind (apiDataStore) {
-        const weatherData = apiDataStore.weatherData;
+    wind (weatherData) {
         let datasets = [];
         let labels = [];
         let $this = this;
@@ -308,8 +302,7 @@ export default {
     },
 
 
-    rain (apiDataStore) {
-        const weatherData = apiDataStore.weatherData;
+    rain (weatherData) {
         let datasets = [];
         let labels = [];
         let $this = this;
@@ -345,8 +338,7 @@ export default {
     },
 
 
-    snow (apiDataStore) {
-        const weatherData = apiDataStore.weatherData;
+    snow (weatherData) {
         let datasets = [];
         let labels = [];
         let $this = this;
@@ -382,13 +374,13 @@ export default {
     },
 
 
-    primaryBorderCrossingData (apiDataStore) {
-        return this.internationalEnergyChart(apiDataStore.mainDirectionData);
+    primaryBorderCrossingData (electricityData) {
+        return this.internationalEnergyChart(electricityData.mainDirectionData);
     },
 
 
-    reversedBorderCrossingData (apiDataStore) {
-        return this.internationalEnergyChart(apiDataStore.reverseDirectionData);
+    reversedBorderCrossingData (electricityData) {
+        return this.internationalEnergyChart(electricityData.reverseDirectionData);
     },
 
 

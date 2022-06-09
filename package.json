@@ -14,7 +14,6 @@
     "core-js": "^3.8.3",
     "leaflet": "^1.8.0",
     "micromodal": "^0.4.10",
-    "pinia": "^2.0.14",
     "tooltipper": "^1.1.4",
     "vue": "^3.2.13",
     "vue-meta": "^2.4.0",

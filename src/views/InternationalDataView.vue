@@ -16,8 +16,8 @@
         :periodName="$route.params.timePeriodName"
         :date="$route.params.date"
         :periodDisplayName="periodDisplayName"
-        :previousUrl="`/data/international/${$route.params.startCountryCode}/${$route.params.endCountryCode}/${$route.params.timePeriodName}/${previousStepDate}`"
-        :nextUrl="`/data/international/${$route.params.startCountryCode}/${$route.params.endCountryCode}/${$route.params.timePeriodName}/${nextStepDate}`" />
+        :previousUrl="previousStepUrl"
+        :nextUrl="nextStepUrl" />
 
     <BarChart
         :headline="`Border Crossing ${startCountryCode} &#129042; ${endCountryCode}`" 
@@ -48,7 +48,6 @@ import BarChart from '@/components/BarChart.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
-import { useApiDataStore } from '@/stores/apiDataStore'
 import SupportModal from '@/components/SupportModal.vue'
 import chartExplanations from '@/services/chartExplanations'
 
@@ -56,23 +55,17 @@ export default {
     name: 'InternationalDataView',
     metaInfo: 'Start',
 
-    setup() {
-        const store = useApiDataStore()
-        return {
-            store
-        }
-    },
-
     data () {
         return {
             periodDisplayName: '',
-            previousStepDate: '1',
-            nextStepDate: '1',
-            electricityData: false,
+            previousStepUrl: '',
+            nextStepUrl: '',
             viewLoaded: false,
-            error: null,
+            error: false,
             startCountryCode: null,
-            endCountryCode: null
+            endCountryCode: null,
+            mainDirectionData: null,
+            reverseDirectionData: null
         }
     },
 
@@ -104,22 +97,8 @@ export default {
             const start = Date.now();
             Promise.all([this.fetchMainDirectionData(), this.fetchReversedDirectionData()])
                 .then(data => {
-                    if (data[0].start_country && data[0].end_country && data[0].time_period && data[0].data && data[1].data) {
-                        console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
-                        // Store meta data locally
-                        $this.periodDisplayName = data[0].time_period;
-                        $this.previousStepDate = data[0].previous_step;
-                        $this.nextStepDate = data[0].next_step;
-                        // Store response in pinia
-                        useApiDataStore.mainDirectionData = data[0].data;
-                        useApiDataStore.reverseDirectionData = data[1].data;
-                        // Trigger chart rendering
-                        $this.render();
-                        $this.viewLoaded = true;
-                    }
-                    else {
-                        $this.showError('Received invalid response from server!')
-                    }
+                    console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
+                    $this.handleApiResponse(data);
                 })
                 .catch(() => { $this.showError('An Error occurred while fetching data!') });
         },
@@ -145,8 +124,8 @@ export default {
 
         render () {
             const start = Date.now();
-            this.$refs.primaryBorderCrossingData.render();
-            this.$refs.reversedBorderCrossingData.render();
+            this.$refs.primaryBorderCrossingData.render(this.mainDirectionData);
+            this.$refs.reversedBorderCrossingData.render(this.reverseDirectionData);
             console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
         },
 
@@ -158,6 +137,38 @@ export default {
 
         showSupportModal (chartId) {
             this.$refs.supportModal.show(chartExplanations[chartId]());
+        },
+
+
+        handleApiResponse (response) {
+            const isValidMetaData = response[0].start_country && response[0].end_country && response[0].time_period;
+            const isValidChartData = response[0].data && response[1].data;
+            if (isValidMetaData && isValidChartData) {
+                this.storeResponseData(response);
+                this.render();
+                this.viewLoaded = true;
+            }
+            else {
+                this.showError('Received invalid response from server!')
+            }
+        },
+
+
+        storeResponseData (response) {
+            this.periodDisplayName = response[0].time_period;
+            this.previousStepUrl = this.siblingViewUrl(response[0].previous_step);
+            this.nextStepUrl = this.siblingViewUrl(response[0].next_step);
+            this.mainDirectionData = response[0].data;
+            this.reverseDirectionData = response[1].data;
+        },
+
+
+        siblingViewUrl (date) {
+            return urlBuilder.getDataUrl(
+                [this.$route.params.startCountryCode, this.$route.$params.endCountryCode],
+                this.$route.params.timePeriodName,
+                date
+            );
         }
 
     },

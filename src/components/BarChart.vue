@@ -13,17 +13,9 @@
 import chartData from '@/services/chartData';
 import chartOptions from '@/services/chartOptions';
 import Chart from 'chart.js/dist/chart';
-import { useApiDataStore } from '@/stores/apiDataStore'
 
 export default {
     name: 'BarChart',
-
-    setup () {
-        const store = useApiDataStore();
-        return {
-            store
-        }
-    },
 
     data () {
         return {
@@ -41,11 +33,11 @@ export default {
     methods: {
 
 
-        render () {
+        render (rawChartData) {
             if (this.chart) this.chart.destroy();
             let app = this;
             this.chart = new Chart(document.getElementById(this.id), {
-                data: chartData[app.id](useApiDataStore),
+                data: chartData[app.id](rawChartData),
                 options: chartOptions[app.id]()
             });
             this.resizeCharts();

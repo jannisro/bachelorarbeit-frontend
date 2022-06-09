@@ -52,10 +52,10 @@ export default {
         },
 
 
-        render () {
+        render (chartData) {
             let app = this;
             this.items.forEach(item => {
-                app.$refs[item.id][0].render()
+                app.$refs[item.id][0].render(chartData)
             });
         }
     },
