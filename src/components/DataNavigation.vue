@@ -1,7 +1,7 @@
 <template>
  <nav class="data-control">
     <div class="flex align-items-center">
-        <router-link :to="previousUrl" class="data-control__arrow">
+        <router-link :to="previousUrl" class="data-control__arrow" :tooltip="`Go to previous ${periodName}`">
             <img src="@/assets/img/left.svg" alt="Previous">
         </router-link>
         <div>
@@ -16,7 +16,7 @@
                     :dark="true"
                     @update:modelValue="redirectDataView" />
         </div>
-        <router-link :to="nextUrl" class="data-control__arrow">
+        <router-link :to="nextUrl" class="data-control__arrow" :tooltip="`Go to next ${periodName}`">
             <img src="@/assets/img/right.svg" alt="Next">
         </router-link>
     </div>

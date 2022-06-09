@@ -2,7 +2,7 @@
 
     <HeaderNavigation 
         :countrySelectionVisible="true" 
-        :selectedCountry="$route.params.countryCode1" />
+        :selectedCountry="$route.params.startCountryCode" />
 
     <h1 v-if="error">
         {{ error }}
@@ -16,22 +16,26 @@
         :periodName="$route.params.timePeriodName"
         :date="$route.params.date"
         :periodDisplayName="periodDisplayName"
-        :previousUrl="`/data/international/${$route.params.countryCode1}/${$route.params.countryCode2}/${$route.params.timePeriodName}/${previousStepDate}`"
-        :nextUrl="`/data/international/${$route.params.countryCode1}/${$route.params.countryCode2}/${$route.params.timePeriodName}/${nextStepDate}`" />
+        :previousUrl="`/data/international/${$route.params.startCountryCode}/${$route.params.endCountryCode}/${$route.params.timePeriodName}/${previousStepDate}`"
+        :nextUrl="`/data/international/${$route.params.startCountryCode}/${$route.params.endCountryCode}/${$route.params.timePeriodName}/${nextStepDate}`" />
 
     <BarChart
         :headline="`Border Crossing ${startCountryCode} &#129042; ${endCountryCode}`" 
         id="primaryBorderCrossingData"
         ref="primaryBorderCrossingData"
-        :viewLoaded="viewLoaded" />
+        :viewLoaded="viewLoaded"
+        @supportButtonClicked="showSupportModal" />
 
     <BarChart
         :headline="`Border Crossing ${endCountryCode} &#129042; ${startCountryCode}`" 
         id="reversedBorderCrossingData"
         ref="reversedBorderCrossingData"
-        :viewLoaded="viewLoaded" />
+        :viewLoaded="viewLoaded"
+        @supportButtonClicked="showSupportModal" />
 
     <!--<IndicatorElement :items="[]" />-->
+
+    <SupportModal ref="supportModal" />
 
 </template>
 
@@ -45,6 +49,8 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
 import { useApiDataStore } from '@/stores/apiDataStore'
+import SupportModal from '@/components/SupportModal.vue'
+import chartExplanations from '@/services/chartExplanations'
 
 export default {
     name: 'InternationalDataView',
@@ -75,7 +81,8 @@ export default {
         DataNavigation,
         BarChart,
         //IndicatorElement,
-        LoadingSpinner
+        LoadingSpinner,
+        SupportModal
     },
 
     methods: {
@@ -146,6 +153,11 @@ export default {
 
         showError (message) {
             this.error = message;
+        },
+
+
+        showSupportModal (chartId) {
+            this.$refs.supportModal.show(chartExplanations[chartId]());
         }
 
     },
@@ -165,7 +177,7 @@ export default {
     watch: {
         $route () {
             window.scrollTo(0, 0);
-            this.viewLoaded = false;
+            this.viewLoaded = this.error = false;
             this.validateAndRender()
         }
     }

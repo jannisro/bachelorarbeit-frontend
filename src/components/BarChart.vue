@@ -1,6 +1,9 @@
 <template>
     <div class="chart" :class="{ 'invisible': !viewLoaded }">
-        <h2 class="chart-headline" v-if="viewLoaded && headline">{{ headline }}</h2>
+        <div class="chart__head">
+            <h2 class="chart__headline" v-if="viewLoaded && headline">{{ headline }}</h2>
+            <button class="chart__help" @click="$emit('supportButtonClicked', id)">?</button>
+        </div>
         <canvas :id="id" :height="chartHeight" data-chart-canvas></canvas>
     </div>
 </template>
@@ -54,15 +57,6 @@ export default {
         },
 
 
-        getTimeLabels () {
-            let res = [];
-            for (let i = 0; i < 24; i++) {
-                res.push(`${i.toString().padStart(2, '0')}:00`)
-            }
-            return res;
-        }
-
-
     },
 
 
@@ -78,11 +72,13 @@ export default {
 
 
 <style lang="less">
+@import '@/assets/less/setup';
+
 .chart {
     width: 94%;
     margin: 0 0 4rem 3%;
     background: rgba(255,255,255,0.06);
-    padding: 2rem 1.2rem;
+    padding: 2.1rem 1.8rem;
     border-radius: 20px;
 
     &.invisible {
@@ -94,9 +90,37 @@ export default {
         max-height: 70vh;
     }
 
-    &-headline {
+    &__head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__headline {
         margin-bottom: 1rem;
         text-align: center;
+    }
+
+    &__help {
+        width:2.7rem;
+        height: 2.7rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: @light;
+        font-size: 1.7rem;
+        padding: 0.9rem;
+        border-radius: 200rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: solid 2px @light;
+        transition: all 250ms;
+
+        &:hover {
+            background: fade(@primary, 30%);
+            border: solid 2px @primary
+        }
     }
 }
 </style>

@@ -15,7 +15,12 @@
     </nav>
 
     <div class="tabs__content" v-for="item in items" :class="{ active: activeTab === item.id }" :key="item.id">
-        <BarChart :ref="item.id" :id="item.id" :viewLoaded="viewLoaded" />
+        <BarChart 
+                :ref="item.id" 
+                :id="item.id" 
+                :headline="item.headline ? item.headline : false" 
+                :viewLoaded="viewLoaded"
+                @supportButtonClicked="$emit('supportButtonClicked', item.id)" />
     </div>
 </template>
 
@@ -70,7 +75,7 @@ export default {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    margin: 3rem 3%;
+    margin: 3rem 0 0rem 4%;
 
     &__trigger {
         background: transparent;
@@ -93,6 +98,7 @@ export default {
 
     &__content {
         display: none;
+        min-height: 90vh;
 
         &.active {
             display: block;

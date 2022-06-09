@@ -91,7 +91,9 @@ export default {
             const code = e.target.feature.properties.code;
             if (code) {
                 window.removeEventListener('mousemove', this.onMouseMove);
-                this.$router.push(urlBuilder.getDataUrl([code], 'day', new Date()));
+                let date = new Date();
+                date.setDate(date.getDate() - 1);
+                this.$router.push(urlBuilder.getDataUrl([code], 'day', date));
             }
         },
 

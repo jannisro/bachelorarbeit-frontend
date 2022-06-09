@@ -1,6 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import StartView from "@/views/StartView.vue";
-import AboutView from "@/views/AboutView.vue";
+import HelpView from "@/views/HelpView.vue";
 import NationalDataView from "@/views/NationalDataView.vue";
 import InternationalDataView from "@/views/InternationalDataView.vue";
 import SearchView from "@/views/SearchView.vue";
@@ -12,9 +12,9 @@ const routes = [
         component: StartView,
     },
     {
-        path: "/about",
-        name: "About",
-        component: AboutView
+        path: "/help",
+        name: "Help",
+        component: HelpView
     },
     {
         path: "/data/national/:countryCode/:timePeriodName/:date",

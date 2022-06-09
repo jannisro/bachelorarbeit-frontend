@@ -5,8 +5,8 @@
             <router-link to="/" class="header__link" :class="{ active: active === 'start' }">
                 Start
             </router-link>
-            <router-link to="/about" class="header__link">
-                About/FAQ
+            <router-link to="/help" class="header__link">
+                Help
             </router-link>
         </nav>
 

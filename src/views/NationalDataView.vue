@@ -24,24 +24,28 @@
         headline="Primary Energy Data" 
         id="primaryEnergyData"
         ref="primaryEnergyChart"
-        :viewLoaded="viewLoaded" />
+        :viewLoaded="viewLoaded"
+        @supportButtonClicked="showSupportModal" />
 
     <BarChart
         headline="Commercial/Physical Exchange" 
         id="secondaryEnergyData"
         ref="secondaryEnergyChart"
-        :viewLoaded="viewLoaded" />
+        :viewLoaded="viewLoaded"
+        @supportButtonClicked="showSupportModal" />
 
     <!--<IndicatorElement :items="[]" />-->
 
-    <ChartTabs ref="weatherChartTabs" :viewLoaded="viewLoaded" :items="[
-        {id: 'weatherOverview', title: 'Overall Deviation'}, 
-        {id: 'clouds', title: 'Clouds'}, 
-        {id: 'temperature', title: 'Temperature'}, 
-        {id: 'wind', title: 'Wind'}, 
-        {id: 'rain', title: 'Rain'}, 
-        {id: 'snow', title: 'Snow'}
+    <ChartTabs ref="weatherChartTabs" @supportButtonClicked="showSupportModal" :viewLoaded="viewLoaded" :items="[
+        {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from overall mean'}, 
+        {id: 'clouds', title: 'Clouds', headline: 'Relative cloudiness per weather station'}, 
+        {id: 'temperature', title: 'Temperature', headline: 'Temperature per weather station'}, 
+        {id: 'wind', title: 'Wind', headline: 'Wind per weather station'}, 
+        {id: 'rain', title: 'Rain', headline: 'Rain per weather station'}, 
+        {id: 'snow', title: 'Snow', headline: 'Snow per weather station'}
     ]" />
+
+    <SupportModal ref="supportModal" />
 
 </template>
 
@@ -56,6 +60,9 @@ import ChartTabs from '@/components/ChartTabs.vue'
 import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
 import { useApiDataStore } from '@/stores/apiDataStore'
+import SupportModal from '@/components/SupportModal.vue'
+import'tooltipper/tooltipper'
+import chartExplanations from '@/services/chartExplanations'
 
 export default {
     name: 'NationalDataView',
@@ -86,7 +93,8 @@ export default {
         BarChart,
         //IndicatorElement,
         ChartTabs,
-        LoadingSpinner
+        LoadingSpinner,
+        SupportModal
     },
 
     methods: {
@@ -149,6 +157,11 @@ export default {
 
         showError (message) {
             this.error = message;
+        },
+
+
+        showSupportModal (chartId) {
+            this.$refs.supportModal.show(chartExplanations[chartId]());
         }
 
     },
@@ -168,7 +181,7 @@ export default {
     watch: {
         $route () {
             window.scrollTo(0, 0);
-            this.viewLoaded = false;
+            this.viewLoaded = this.error = false;
             this.validateAndRender()
         }
     }
@@ -180,4 +193,5 @@ export default {
 @import '@/assets/less/setup';
 @import '@/assets/less/utils';
 @import '@/assets/less/button';
+@import '@/assets/less/tooltip';
 </style>
