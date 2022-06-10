@@ -3,7 +3,7 @@ export default {
     primaryEnergyData () {
         return {
             title: 'Primary Energy Data',
-            caption: 'This chart displays the electricity generation per production type, forecasted and actual load, the electricity spot price and the net position.',
+            caption: 'This chart displays the electricity generation, forecasted and actual load, the electricity spot price and the net position.',
             bullets: [
                 'All data (including the load forecast) is fetched from the EntsoE',
                 'The net position is calculated as the difference between total generation and total actual load',
@@ -12,11 +12,22 @@ export default {
         }
     },
 
+    generationChart () {
+        return {
+            title: 'Generation per Production type',
+            caption: 'Shows the electricity generation per production type. ',
+            bullets: [
+                'All data is fetched from the EntsoE'
+            ]
+        }
+    },
+
     secondaryEnergyData () {
         return {
             title: 'Commercial & Physical Exchange',
-            caption: 'This chart shows the sum of traded and physical electricity flow. The exchange of certain border crossings can be viewed by going to the respective border view (click on nationwide in the upper right corner and select a crossing)',
+            caption: 'This chart shows the sum of traded and physical electricity flow. The exchange of certain border crossings can be viewed by selecting the respective border relation in the upper right corner.',
             bullets: [
+                'Each result is calculated by summing up all exports and subtracting all imports',
                 'The commercial exchange is the sum of all traded electricity',
                 'The physical flow represents the sum of the actual exchanged electricity load',
                 'All data is fetched from the EntsoE'

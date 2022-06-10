@@ -28,6 +28,13 @@
         @supportButtonClicked="showSupportModal" />
 
     <BarChart
+        headline="Generation per Production Type" 
+        id="generationChart"
+        ref="generationChart"
+        :viewLoaded="viewLoaded"
+        @supportButtonClicked="showSupportModal" />
+
+    <BarChart
         headline="Commercial/Physical Exchange" 
         id="secondaryEnergyData"
         ref="secondaryEnergyChart"
@@ -132,9 +139,9 @@ export default {
 
 
         render () {
-            console.log(this.$refs)
             const start = Date.now();
             this.$refs.primaryEnergyChart.render(this.electricityData);
+            this.$refs.generationChart.render(this.electricityData);
             this.$refs.secondaryEnergyChart.render(this.electricityData);
             this.$refs.weatherChartTabs.render(this.weatherData);
             this.$refs.indicators.render(indicatorBuilder.primaryEnergyIndicators(this.electricityData));

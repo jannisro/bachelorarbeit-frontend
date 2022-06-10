@@ -40,19 +40,19 @@ export default {
 
     primaryEnergyData () {
         return {
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             plugins: this.commonPluginSettings(false),
             scales: {
                 xAxis: {
-                    stacked: true,
                     title: {    
                         display: true,
                         text: 'Time'
                     }
                 },
                 yAxis: {
-                    stacked: false,
-                    min: -10000,
-                    max: 80000,
                     title: {
                         text: 'MW',
                         display: true
@@ -62,14 +62,6 @@ export default {
                             return value + ' MW';
                         }
                     }
-                },
-                stackedYAxis: {
-                    type: 'linear',
-                    stacked: true,
-                    position: 'left',
-                    /*min: -10000,
-                    max: 80000,*/
-                    display: false
                 },
                 priceYAxis: {
                     type: 'linear',
@@ -85,6 +77,26 @@ export default {
                             return value + '€';
                         }
                     }
+                }
+            }
+        }
+    },
+
+
+    generationChart () {
+        return {
+            plugins: this.commonPluginSettings(false),
+            scales: {
+                xAxis: {
+                    stacked: true,
+                    title: {    
+                        display: true,
+                        text: 'Time'
+                    }
+                },
+                yAxis: {
+                    type: 'linear',
+                    stacked: true,
                 }
             }
         }

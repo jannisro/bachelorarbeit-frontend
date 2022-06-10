@@ -9,48 +9,17 @@ export default {
     },
 
     secondaryColors: [
-        '#E8F5E9', 
-        '#A5D6A7', 
-        '#66BB6A', 
-        '#43A047', 
-        '#2E7D32', 
-        '#00E676', 
-        '#DCE775', 
-        '#CDDC39', 
-        '#AFB42B', 
-        '#827717', 
-        '#C6FF00', 
-        '#80CBC4', 
-        '#26A69A', 
-        '#00897B', 
-        '#00695C', 
-        '#00BFA5',
-        '#FFF9C4',
-        '#FFF176',
-        '#FFEB3B',
-        '#FBC02D'
+        '#E8F5E9', '#A5D6A7', '#66BB6A', '#43A047', '#2E7D32', '#00E676', '#DCE775', 
+        '#CDDC39', '#AFB42B', '#827717', '#C6FF00', '#80CBC4', '#26A69A', '#00897B', 
+        '#00695C', '#00BFA5', '#FFF9C4', '#FFF176', '#FFEB3B', '#FBC02D', '#FF3D00',
+        '#2962FF', '#00B8D4', '#FF6D00', '#ECEFF1', '#64DD17', '#FF9100', '#1DE9B6',
+        '#FFFF00', '#FFEA00', '#AEEA00', '#1E88E5', '#E57373', '#512DA8', '#7986CB'
     ],
 
 
     primaryEnergyData (electricityData) {
         let datasets = [];
         let labels = []
-        if (electricityData.generation && electricityData.load && electricityData.net_position && electricityData.price) {
-            // Generation
-            let index = 0;
-            for (let psrType in electricityData.generation) {
-                datasets.push({
-                    label: electricityData.generation[psrType].name,
-                    data: electricityData.generation[psrType].hourly.map(item => { return item.value }),
-                    type: 'bar',
-                    backgroundColor: this.secondaryColors[index],
-                    borderColor: this.secondaryColors[index],
-                    order: 2
-                })
-                ++index;
-                if (index > this.secondaryColors.length) index = 0
-            }
-        }
         if (electricityData.load && electricityData.net_position && electricityData.price && electricityData.total_generation) {
             // Load and Load forecast
             datasets.push({
@@ -100,6 +69,33 @@ export default {
                 borderColor: this.mainColors.blue,
                 order: 1
             });
+        }
+        return {
+            datasets: datasets,
+            labels: labels
+        };
+    },
+
+
+    generationChart (electricityData) {
+        let datasets = [];
+        let labels = []
+        if (electricityData.generation && electricityData.load) {
+            electricityData.load.map(item => labels.push(item.dt));
+            let index = 0;
+            for (let psrType in electricityData.generation) {
+                datasets.push({
+                    label: electricityData.generation[psrType].name,
+                    data: electricityData.generation[psrType].hourly.map(item => { return item.value }),
+                    type: 'bar',
+                    backgroundColor: this.secondaryColors[index],
+                    borderColor: this.secondaryColors[index],
+                    order: 2,
+                    yAxisId: 'stackedYAxis'
+                })
+                ++index;
+                if (index > this.secondaryColors.length) index = 0
+            }
         }
         return {
             datasets: datasets,

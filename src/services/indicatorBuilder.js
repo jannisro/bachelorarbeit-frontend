@@ -27,6 +27,10 @@ export default {
                 {
                     name: 'Electricity Price Deviation',
                     value: this.deviationFromMean(electricityData.price, electricityData.mean_values.price)
+                },
+                {
+                    name: 'Total NTC Deviation',
+                    value: this.deviationFromMean(electricityData.net_transfer_capacity, electricityData.mean_values.ntc)
                 }
             ]
         }
