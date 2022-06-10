@@ -1,8 +1,11 @@
 <template>
-    <div class="indicator__wrapper">
+    <div class="indicator-help" v-if="viewLoaded">
+        <SupportButton @supportButtonClicked="$emit('supportButtonClicked')" />
+    </div>
+    <div class="indicator-wrapper" v-if="viewLoaded">
         <div class="indicator" v-for="(item, index) in items" :key="`indicator-${index}`">
-            <p class="indicator__number">
-                {{ item.value }}
+            <p class="indicator__number" :class="getNumberColor(item.value)">
+                {{ parseFloat(item.value) >= 0 ? '+' : '-' }}{{ item.value }}{{ prefix }}
             </p>
             <p class="indicator__name">
                 {{ item.name }}
@@ -13,16 +16,16 @@
 
 
 <script>
-import { useApiDataStore } from '@/stores/apiDataStore';
+import SupportButton from '@/components/SupportButton.vue';
 
 export default {
     name: 'IndicatorList',
+    emits: ['supportButtonClicked'],
 
-    setup () {
-        const store = useApiDataStore();
-        return {
-            store
-        }
+    props: {
+        prefix: String, // Unit to attach to each value
+        viewLoaded: Boolean, // Boolean to indicate when to show content
+        colorThresholds: Array // Thresholds where the color of indicators should change
     },
 
     data () {
@@ -31,8 +34,32 @@ export default {
         }
     },
 
-    props: {
-        indicators: Array
+    components: {
+        SupportButton
+    },
+
+    methods: {
+
+        render (items) {
+            this.items = items;
+        },
+
+
+        getNumberColor (number) {
+            if (this.colorThresholds.length === 2) {
+                if (Math.abs(number) < this.colorThresholds[0]) {
+                    return 'green';
+                }
+                else if (Math.abs(number) < this.colorThresholds[1]) {
+                    return 'yellow'
+                }
+                else {
+                    return 'red'
+                }
+            }
+            return '';
+        }
+
     }
 }
 </script>
@@ -43,21 +70,28 @@ export default {
 
 
 .indicator {
-    width: 19%;
+    width: 23%;
     background: fade(@primary, 20%);
     padding: 1.1rem;
-    border-radius: 5px;
+    border-radius: 10px;
     text-align: center;
-    margin: 0.7rem 1rem;
+    margin: 0.7rem 1%;
     border: solid 2px @primary;
 
     &-wrapper {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
+        justify-content: center;
         align-items: flex-start;
         width: 94%;
-        margin: 4rem 3% 6rem 3%;
+        margin: 0 3% 7rem 3%;
+    }
+
+    &-help {
+        width: 96%;
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 4rem;
     }
 
     &__number {

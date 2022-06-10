@@ -34,16 +34,24 @@
         :viewLoaded="viewLoaded"
         @supportButtonClicked="showSupportModal" />
 
-    <!--<IndicatorElement :items="[]" />-->
+    <IndicatorList 
+            prefix="%" 
+            :colorThresholds="[10, 30]" 
+            ref="indicators" 
+            :viewLoaded="viewLoaded"
+            @supportButtonClicked="showSupportModal('energyIndicators')" />
 
-    <ChartTabs ref="weatherChartTabs" @supportButtonClicked="showSupportModal" :viewLoaded="viewLoaded" :items="[
-        {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from overall mean'}, 
-        {id: 'clouds', title: 'Clouds', headline: 'Relative cloudiness per weather station'}, 
-        {id: 'temperature', title: 'Temperature', headline: 'Temperature per weather station'}, 
-        {id: 'wind', title: 'Wind', headline: 'Wind per weather station'}, 
-        {id: 'rain', title: 'Rain', headline: 'Rain per weather station'}, 
-        {id: 'snow', title: 'Snow', headline: 'Snow per weather station'}
-    ]" />
+    <ChartTabs 
+            ref="weatherChartTabs" 
+            @supportButtonClicked="showSupportModal" 
+            :viewLoaded="viewLoaded" :items="[
+                {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from overall mean'}, 
+                {id: 'clouds', title: 'Clouds', headline: 'Relative cloudiness per weather station'}, 
+                {id: 'temperature', title: 'Temperature', headline: 'Temperature per weather station'}, 
+                {id: 'wind', title: 'Wind', headline: 'Wind per weather station'}, 
+                {id: 'rain', title: 'Rain', headline: 'Rain per weather station'}, 
+                {id: 'snow', title: 'Snow', headline: 'Snow per weather station'}
+            ]" />
 
     <SupportModal ref="supportModal" />
 
@@ -54,13 +62,14 @@ import HeaderNavigation from '@/components/HeaderNavigation.vue'
 import validation from '@/services/validation'
 import DataNavigation from '@/components/DataNavigation.vue'
 import BarChart from '@/components/BarChart.vue'
-//import IndicatorElement from '@/components/IndicatorElement.vue'
+import IndicatorList from '@/components/IndicatorList.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import ChartTabs from '@/components/ChartTabs.vue'
 import urlBuilder from '@/services/urlBuilder'
 import SupportModal from '@/components/SupportModal.vue'
 import'tooltipper/tooltipper'
 import chartExplanations from '@/services/chartExplanations'
+import indicatorBuilder from '@/services/indicatorBuilder'
 
 export default {
     name: 'NationalDataView',
@@ -82,7 +91,7 @@ export default {
         HeaderNavigation,
         DataNavigation,
         BarChart,
-        //IndicatorElement,
+        IndicatorList,
         ChartTabs,
         LoadingSpinner,
         SupportModal
@@ -108,7 +117,7 @@ export default {
                     console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
                     $this.handleApiResponse(data);
                 })
-                .catch(() => { $this.showError('An Error occurred while fetching data!') });
+                .catch(e => { $this.showError('An Error occurred while fetching data!', e) });
         },
 
 
@@ -123,16 +132,21 @@ export default {
 
 
         render () {
+            console.log(this.$refs)
             const start = Date.now();
             this.$refs.primaryEnergyChart.render(this.electricityData);
             this.$refs.secondaryEnergyChart.render(this.electricityData);
-            this.$refs.weatherChartTabs.render(this.weatherData)
+            this.$refs.weatherChartTabs.render(this.weatherData);
+            this.$refs.indicators.render(indicatorBuilder.primaryEnergyIndicators(this.electricityData));
             console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
         },
 
 
-        showError (message) {
+        showError (message, exception) {
             this.error = message;
+            if (exception) {
+                console.log(exception);
+            }
         },
 
 

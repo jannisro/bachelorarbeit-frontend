@@ -101,7 +101,7 @@ export default {
                     console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
                     $this.handleApiResponse(data);
                 })
-                .catch(() => { $this.showError('An Error occurred while fetching data!') });
+                .catch(e => { $this.showError('An Error occurred while fetching data!', e) });
         },
 
 
@@ -129,8 +129,11 @@ export default {
         },
 
 
-        showError (message) {
+        showError (message, exception) {
             this.error = message;
+            if (exception) {
+                console.log(exception);
+            }
         },
 
 

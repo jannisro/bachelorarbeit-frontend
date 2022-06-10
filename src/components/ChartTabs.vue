@@ -1,8 +1,4 @@
 <template>
-    <h2 class="chart-headline">
-        {{ headline }}
-    </h2>
-
     <nav class="tabs" v-if="viewLoaded">
         <button 
                 class="tabs__trigger" 
@@ -18,7 +14,7 @@
         <BarChart 
                 :ref="item.id" 
                 :id="item.id" 
-                :headline="item.headline ? item.headline : false" 
+                :headline="item.headline ? item.headline : ''" 
                 :viewLoaded="viewLoaded"
                 @supportButtonClicked="$emit('supportButtonClicked', item.id)" />
     </div>
@@ -29,6 +25,7 @@ import BarChart from '@/components/BarChart.vue'
 
 export default {
     name: 'ChartTabs',
+    emits: ['supportButtonClicked'],
 
     data () {
         return {

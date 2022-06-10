@@ -111,6 +111,18 @@ export default {
 
     reversedBorderCrossingData () {
         return this.primaryBorderCrossingData();
+    },
+
+
+    energyIndicators () {
+        return {
+            title: 'Energy Indicators',
+            caption: 'These numbers are displaying the percentual deviation of energy datapoints from the mean value.',
+            bullets: [
+                'Base value is the sum of an energy datapoint of the current time period',
+                'Compared value is the mean of this datapoint over the last 30 days'
+            ]
+        }
     }
 
 }

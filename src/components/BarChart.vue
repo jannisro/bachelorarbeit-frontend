@@ -2,7 +2,7 @@
     <div class="chart" :class="{ 'invisible': !viewLoaded }">
         <div class="chart__head">
             <h2 class="chart__headline" v-if="viewLoaded && headline">{{ headline }}</h2>
-            <button class="chart__help" @click="$emit('supportButtonClicked', id)">?</button>
+            <SupportButton @supportButtonClicked="$emit('supportButtonClicked', id)" />
         </div>
         <canvas :id="id" :height="chartHeight" data-chart-canvas></canvas>
     </div>
@@ -13,9 +13,11 @@
 import chartData from '@/services/chartData';
 import chartOptions from '@/services/chartOptions';
 import Chart from 'chart.js/dist/chart';
+import SupportButton from '@/components/SupportButton.vue';
 
 export default {
     name: 'BarChart',
+    emits: ['supportButtonClicked'],
 
     data () {
         return {
@@ -28,6 +30,10 @@ export default {
         headline: String,
         id: String,
         viewLoaded: Boolean
+    },
+
+    components: {
+        SupportButton
     },
     
     methods: {
@@ -91,28 +97,6 @@ export default {
     &__headline {
         margin-bottom: 1rem;
         text-align: center;
-    }
-
-    &__help {
-        width:2.7rem;
-        height: 2.7rem;
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: @light;
-        font-size: 1.7rem;
-        padding: 0.9rem;
-        border-radius: 200rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border: solid 2px @light;
-        transition: all 250ms;
-
-        &:hover {
-            background: fade(@primary, 30%);
-            border: solid 2px @primary
-        }
     }
 }
 </style>
