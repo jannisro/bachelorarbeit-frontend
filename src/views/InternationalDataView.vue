@@ -4,11 +4,12 @@
         :countrySelectionVisible="true" 
         :selectedCountry="$route.params.startCountryCode" />
 
-    <h1 v-if="error">
-        {{ error }}
-    </h1>
+    <div v-if="error" class="flex-column align-items-center">
+        <h1 class="mt-5 mb-2">{{ error }}</h1>
+        <a href="" class="button">Retry</a>
+    </div>
 
-    <LoadingSpinner v-if="!viewLoaded" />
+    <LoadingSpinner v-if="!viewLoaded && !error" />
 
     <DataNavigation 
         v-if="viewLoaded"
@@ -46,7 +47,6 @@ import DataNavigation from '@/components/DataNavigation.vue'
 import BarChart from '@/components/BarChart.vue'
 //import IndicatorElement from '@/components/IndicatorElement.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
-import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
 import SupportModal from '@/components/SupportModal.vue'
 import chartExplanations from '@/services/chartExplanations'
@@ -96,6 +96,7 @@ export default {
             let $this = this;
             const start = Date.now();
             Promise.all([this.fetchMainDirectionData(), this.fetchReversedDirectionData()])
+                .then(responses => Promise.all(responses.map(res => res.json())))
                 .then(data => {
                     console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
                     $this.handleApiResponse(data);
@@ -105,8 +106,7 @@ export default {
 
 
         async fetchMainDirectionData () {
-            let response = await axios.get(urlBuilder.internationalElectricityApi(this.$route.params));
-            return response.data;
+            return await fetch(urlBuilder.internationalElectricityApi(this.$route.params));
         },
 
 
@@ -117,8 +117,7 @@ export default {
                 timePeriodName: this.$route.params.timePeriodName,
                 date: this.$route.params.date
             };
-            let response = await axios.get(urlBuilder.internationalElectricityApi(params));
-            return response.data;
+            return await fetch(urlBuilder.internationalElectricityApi(params));
         },
 
 
@@ -165,7 +164,7 @@ export default {
 
         siblingViewUrl (date) {
             return urlBuilder.getDataUrl(
-                [this.$route.params.startCountryCode, this.$route.$params.endCountryCode],
+                [this.$route.params.startCountryCode, this.$route.params.endCountryCode],
                 this.$route.params.timePeriodName,
                 date
             );

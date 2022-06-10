@@ -57,7 +57,6 @@ import BarChart from '@/components/BarChart.vue'
 //import IndicatorElement from '@/components/IndicatorElement.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import ChartTabs from '@/components/ChartTabs.vue'
-import axios from 'axios/dist/axios'
 import urlBuilder from '@/services/urlBuilder'
 import SupportModal from '@/components/SupportModal.vue'
 import'tooltipper/tooltipper'
@@ -104,23 +103,22 @@ export default {
             let $this = this;
             const start = Date.now();
             Promise.all([this.fetchElectricityData(), this.fetchWeatherData()])
+                .then(responses => Promise.all(responses.map(res => res.json())))
                 .then(data => {
                     console.log(`Data retrieved in ${Date.now() - start} milliseconds`);
                     $this.handleApiResponse(data);
                 })
-                .catch((e) => { console.log(e); $this.showError('An Error occurred while fetching data!') });
+                .catch(() => { $this.showError('An Error occurred while fetching data!') });
         },
 
 
         async fetchElectricityData () {
-            let response = await axios.get(urlBuilder.nationalElectricityApi(this.$route.params));
-            return response.data;
+            return await fetch(urlBuilder.nationalElectricityApi(this.$route.params));
         },
 
 
         async fetchWeatherData () {
-            let response = await axios.get(urlBuilder.weatherDataApi(this.$route.params));
-            return response.data;
+            return await fetch(urlBuilder.weatherDataApi(this.$route.params));
         },
 
 

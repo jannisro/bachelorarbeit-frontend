@@ -375,12 +375,12 @@ export default {
 
 
     primaryBorderCrossingData (electricityData) {
-        return this.internationalEnergyChart(electricityData.mainDirectionData);
+        return this.internationalEnergyChart(electricityData);
     },
 
 
     reversedBorderCrossingData (electricityData) {
-        return this.internationalEnergyChart(electricityData.reverseDirectionData);
+        return this.internationalEnergyChart(electricityData);
     },
 
 
