@@ -6,15 +6,15 @@
         </router-link>
         <div>
             <Datepicker 
-                    v-model="dateModel" 
-                    :enableTimePicker="false" 
-                    :placeholder="periodName" 
-                    format="yyyy-MM-dd" 
-                    :autoApply="true" 
-                    :hideInputIcon="true"
-                    inputClassName="data-control__datepicker"
-                    :dark="true"
-                    @update:modelValue="redirectDataView" />
+                v-model="dateModel" 
+                :enableTimePicker="false" 
+                :placeholder="periodName" 
+                format="yyyy-MM-dd" 
+                :autoApply="true" 
+                :hideInputIcon="true"
+                inputClassName="data-control__datepicker"
+                :dark="true"
+                @update:modelValue="redirectDataView" />
         </div>
         <router-link :to="nextUrl" class="data-control__arrow" :tooltip="`Go to next ${periodName}`">
             <img src="@/assets/img/right.svg" alt="Next">

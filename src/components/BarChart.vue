@@ -7,9 +7,9 @@
         </div>
 
         <div class="chart-control" v-if="viewLoaded && preparedChartData">
-            <button class="button" @click="toggleAllDatarows">
+            <ButtonElement @click="toggleAllDatarows">
                 {{ allHidden ? 'Show all' : 'Hide all' }}
-            </button>
+            </ButtonElement>
         </div>
 
         <canvas :id="id" :height="chartHeight" data-chart-canvas></canvas>
@@ -23,6 +23,7 @@ import chartData from '@/services/chartData';
 import chartOptions from '@/services/chartOptions';
 import Chart from 'chart.js/dist/chart';
 import SupportButton from '@/components/SupportButton.vue';
+import ButtonElement from '@/components/ButtonElement.vue';
 
 export default {
     name: 'BarChart',
@@ -45,7 +46,8 @@ export default {
     },
 
     components: {
-        SupportButton
+        SupportButton,
+        ButtonElement
     },
     
     methods: {

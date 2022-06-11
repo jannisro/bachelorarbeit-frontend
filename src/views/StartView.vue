@@ -1,5 +1,5 @@
 <template>
-    <HeaderNavigation :countrySelectionVisible="false" active="start" />
+    <HeaderNavigation :countrySelectionVisible="false" />
     <StartMap />
 </template>
 

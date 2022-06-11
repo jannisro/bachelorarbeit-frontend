@@ -2,7 +2,7 @@
     <header class="header">
 
         <nav>
-            <router-link to="/" class="header__link" :class="{ active: active === 'start' }">
+            <router-link to="/" class="header__link">
                 Start
             </router-link>
             <router-link to="/help" class="header__link">
@@ -101,7 +101,7 @@ export default {
         transition: all 250ms;
         font-size: 1.1rem;
 
-        &:hover, &.active {
+        &:hover, &.router-link-active {
             color: @primary;
         }
 

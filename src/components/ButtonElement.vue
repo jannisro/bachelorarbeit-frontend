@@ -1,4 +1,23 @@
-// out: false
+<template>
+    <a class="button" v-if="href">
+        <slot></slot>
+    </a>
+    <button class="button" v-else>
+        <slot></slot>
+    </button>
+</template>
+
+<script>
+export default {
+    name: 'ButtonElement',
+    props: {
+        href: String
+    }
+}
+</script>
+
+<style lang="less">
+@import '@/assets/less/setup';
 
 .button {
     text-decoration: none;
@@ -29,3 +48,4 @@ html.light .button {
         color: @light;
     }
 }
+</style>

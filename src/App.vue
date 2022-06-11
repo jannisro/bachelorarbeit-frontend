@@ -24,7 +24,6 @@ export default {
 
 <style lang="less">
 @import '@/assets/less/setup';
-@import '@/assets/less/button';
 
 * {
     margin: 0;

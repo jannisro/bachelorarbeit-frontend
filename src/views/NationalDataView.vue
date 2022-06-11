@@ -1,12 +1,12 @@
 <template>
 
-    <HeaderNavigation 
-        :countrySelectionVisible="true" 
-        :selectedCountry="$route.params.countryCode" />
+    <HeaderNavigation :countrySelectionVisible="true" :selectedCountry="$route.params.countryCode" />
 
     <div v-if="error" class="flex-column align-items-center">
         <h1 class="mt-5 mb-2">{{ error }}</h1>
-        <a href="" class="button">Retry</a>
+        <ButtonElement href="">
+            Retry
+        </ButtonElement>
     </div>
         
     <LoadingSpinner v-if="!viewLoaded && !error" />
@@ -32,7 +32,8 @@
         id="generationChart"
         ref="generationChart"
         :viewLoaded="viewLoaded"
-        @supportButtonClicked="showSupportModal" />
+        @supportButtonClicked="showSupportModal"
+        v-if="$route.params.timePeriodName === 'day'" />
 
     <BarChart
         headline="Commercial/Physical Exchange" 
@@ -77,6 +78,7 @@ import SupportModal from '@/components/SupportModal.vue'
 import'tooltipper/tooltipper'
 import chartExplanations from '@/services/chartExplanations'
 import indicatorBuilder from '@/services/indicatorBuilder'
+import ButtonElement from '@/components/ButtonElement.vue'
 
 export default {
     name: 'NationalDataView',
@@ -101,7 +103,8 @@ export default {
         IndicatorList,
         ChartTabs,
         LoadingSpinner,
-        SupportModal
+        SupportModal,
+        ButtonElement
     },
 
     methods: {
@@ -141,7 +144,9 @@ export default {
         render () {
             const start = Date.now();
             this.$refs.primaryEnergyChart.render(this.electricityData);
-            this.$refs.generationChart.render(this.electricityData);
+            if (this.$route.params.timePeriodName === 'day') {
+                this.$refs.generationChart.render(this.electricityData);
+            }
             this.$refs.secondaryEnergyChart.render(this.electricityData);
             this.$refs.weatherChartTabs.render(this.weatherData);
             this.$refs.indicators.render(indicatorBuilder.primaryEnergyIndicators(this.electricityData));
@@ -151,9 +156,7 @@ export default {
 
         showError (message, exception) {
             this.error = message;
-            if (exception) {
-                console.log(exception);
-            }
+            exception ? console.log(exception) : null;
         },
 
 
@@ -221,6 +224,5 @@ export default {
 <style lang="less">
 @import '@/assets/less/setup';
 @import '@/assets/less/utils';
-@import '@/assets/less/button';
 @import '@/assets/less/tooltip';
 </style>

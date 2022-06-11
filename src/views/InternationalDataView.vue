@@ -1,12 +1,12 @@
 <template>
 
-    <HeaderNavigation 
-        :countrySelectionVisible="true" 
-        :selectedCountry="$route.params.startCountryCode" />
+    <HeaderNavigation :countrySelectionVisible="true" :selectedCountry="$route.params.startCountryCode" />
 
     <div v-if="error" class="flex-column align-items-center">
         <h1 class="mt-5 mb-2">{{ error }}</h1>
-        <a href="" class="button">Retry</a>
+        <ButtonElement href="">
+            Retry
+        </ButtonElement>
     </div>
 
     <LoadingSpinner v-if="!viewLoaded && !error" />
@@ -201,5 +201,4 @@ export default {
 <style lang="less">
 @import '@/assets/less/setup';
 @import '@/assets/less/utils';
-@import '@/assets/less/button';
 </style>
