@@ -84,7 +84,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding: 0.7rem 1rem;
-    background: transparent;
+    background: @dark;
 
     &--fixed {
         position: fixed;

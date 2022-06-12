@@ -31,27 +31,17 @@
             </div>
             <div class="form__group" v-if="!allTimePeriods">
                 <Datepicker 
-                    v-model="periodStartModel" 
+                    v-model="timePeriodModel" 
                     :enableTimePicker="false" 
+                    :range="true"
                     format="yyyy-MM-dd" 
                     :autoApply="true" 
                     inputClassName="form__control"
                     :dark="true"
                     :hideInputIcon="true"
-                    placeholder="Time Range Start"
-                    id="period_start" />
-            </div>
-            <div class="form__group" v-if="!allTimePeriods">
-                <Datepicker 
-                    v-model="periodEndModel" 
-                    :enableTimePicker="false" 
-                    format="yyyy-MM-dd" 
-                    :autoApply="true" 
-                    inputClassName="form__control"
-                    :dark="true"
-                    :hideInputIcon="true"
-                    placeholder="Time Range End"
-                    id="period_end" />
+                    placeholder="Select Time Range"
+                    id="period_start"
+                />
             </div>
         </div>
 
@@ -64,7 +54,8 @@
                     class="form__tag" 
                     v-for="field in getFieldsByActivity(false)" 
                     :key="`inactive-${field.code}`" 
-                    @click="setFieldActivity(field.code, true)">
+                    @click="setFieldActivity(field.code, true)"
+                >
                     <span class="form__tag__icon">+</span>
                     <span>{{ field.name }}</span>
                 </button>
@@ -76,19 +67,20 @@
                     :key="`active-${field.name}`">
                     <button 
                         class="form__round-button" 
-                        @click="setFieldActivity(field.code, false)"
-                        :tooltip="`Remove ${field.name} from your search`">
+                        @click="setFieldActivity(field.code, false)" 
+                        :tooltip="`Remove ${field.name} from your search`"
+                    >
                         <img src="@/assets/img/close.svg" alt="Cross icon">
                     </button>
                     {{ field.name }}:
-                    Between <input type="number" class="form__inline-control" value="0">{{ field.unit }}
-                    and <input type="number" class="form__inline-control" value="1000">{{ field.unit }}
+                    Between <input type="number" class="form__inline-control" v-model="fields[field.index].minRangeModel">{{ field.unit }}
+                    and <input type="number" class="form__inline-control" v-model="fields[field.index].maxRangeModel">{{ field.unit }}
                 </div>
             </div>
         </div>
 
         <div class="form__segment form__segment--center">
-            <ButtonElement @clicked="fetchResults">
+            <ButtonElement @click="fetchResults">
                 Search
             </ButtonElement>
         </div>
@@ -109,7 +101,7 @@ import ButtonElement from '@/components/ButtonElement.vue';
 
 export default {
     name: 'SearchForm',
-    emits: ['resultsReceived'],
+    emits: ['searchStarted', 'resultsReceived'],
 
     components: { 
         Datepicker,
@@ -123,88 +115,126 @@ export default {
             countries: [],
             countryModel: 'all',
             allTimePeriods: true,
-            periodStartModel: null,
-            periodEndModel: null,
+            timePeriodModel: null,
             addFieldModel: 'generation',
             fields: [
                 {
-                    'name': 'Generation',
-                    'code': 'total_generation',
-                    'unit': 'MW',
-                    'active': false
+                    index: 0,
+                    name: 'Generation',
+                    code: 'total_generation',
+                    unit: 'MW',
+                    minRangeModel: 0,
+                    maxRangeModel: 10000,
+                    active: false
                 },
                 {
-                    'name': 'Load',
-                    'code': 'load',
-                    'unit': 'MW',
-                    'active': false
+                    index: 1,
+                    name: 'Load',
+                    code: 'load',
+                    unit: 'MW',
+                    minRangeModel: 0,
+                    maxRangeModel: 10000,
+                    active: false
                 },
                 {
-                    'name': 'Load Forecast',
-                    'code': 'load_forecast',
-                    'unit': 'MW',
-                    'active': false
+                    index: 2,
+                    name: 'Load Forecast',
+                    code: 'load_forecast',
+                    unit: 'MW',
+                    minRangeModel: 0,
+                    maxRangeModel: 10000,
+                    active: false
                 },
                 {
-                    'name': 'Electricity Price',
-                    'code': 'price',
-                    'unit': '€',
-                    'active': false
+                    index: 3,
+                    name: 'Electricity Price',
+                    code: 'price',
+                    unit: '€',
+                    minRangeModel: 0,
+                    maxRangeModel: 300,
+                    active: false
                 },
                 {
-                    'name': 'Net Position',
-                    'code': 'net_position',
-                    'unit': 'MW',
-                    'active': false
+                    index: 4,
+                    name: 'Net Position',
+                    code: 'net_position',
+                    unit: 'MW',
+                    minRangeModel: -1000,
+                    maxRangeModel: 1000,
+                    active: false
                 },
                 {
-                    'name': 'Commercial Flow',
-                    'code': 'commercial_flow',
-                    'unit': 'MW',
-                    'active': false
+                    index: 5,
+                    name: 'Commercial Flow',
+                    code: 'commercial_flow',
+                    unit: 'MW',
+                    minRangeModel: 0,
+                    maxRangeModel: 1000,
+                    active: false
                 },
                 {
-                    'name': 'Physical Flow',
-                    'code': 'physical_flow',
-                    'unit': 'MW',
-                    'active': false
+                    index: 6,
+                    name: 'Physical Flow',
+                    code: 'physical_flow',
+                    unit: 'MW',
+                    minRangeModel: 0,
+                    maxRangeModel: 1000,
+                    active: false
                 },
                 {
-                    'name': 'NTC',
-                    'code': 'net_transfer_capacity',
-                    'unit': 'MW',
-                    'active': false
+                    index: 7,
+                    name: 'NTC',
+                    code: 'net_transfer_capacity',
+                    unit: 'MW',
+                    minRangeModel: 0,
+                    maxRangeModel: 1000,
+                    active: false
                 },
                 {
-                    'name': 'Temperature',
-                    'code': 'temperature',
-                    'unit': '°C',
-                    'active': false
+                    index: 8,
+                    name: 'Temperature',
+                    code: 'temperature',
+                    unit: '°C',
+                    minRangeModel: 0,
+                    maxRangeModel: 20,
+                    active: false
                 },
                 {
-                    'name': 'Wind',
-                    'code': 'wind',
-                    'unit': 'm/s',
-                    'active': false
+                    index: 9,
+                    name: 'Wind',
+                    code: 'wind',
+                    unit: 'm/s',
+                    minRangeModel: 0,
+                    maxRangeModel: 10,
+                    active: false
                 },
                 {
-                    'name': 'Clouds',
-                    'code': 'clouds',
-                    'unit': '%',
-                    'active': false
+                    index: 10,
+                    name: 'Clouds',
+                    code: 'clouds',
+                    unit: '%',
+                    minRangeModel: 0,
+                    maxRangeModel: 100,
+                    active: false
                 },
                 {
-                    'name': 'Rain',
-                    'code': 'rain',
-                    'unit': 'mm',
-                    'active': false
+                    index: 11,
+                    name: 'Rain',
+                    code: 'rain',
+                    unit: 'mm',
+                    minRangeModel: 0,
+                    maxRangeModel: 10,
+                    active: false
                 },
                 {
-                    'name': 'Snow',
-                    'code': 'snow',
-                    'unit': 'mm',
-                    'active': false
-                },
+                    index: 12,
+                    name: 'Snow',
+                    code: 'snow',
+                    unit: 'mm',
+                    minRangeModel: 0,
+                    maxRangeModel: 10,
+                    active: false
+                }
             ]
         }
     },
@@ -239,24 +269,32 @@ export default {
 
 
         fetchResults () {
-            let query = '';
+            this.$emit('searchStarted');
+            console.log(`${process.env.VUE_APP_API_URL}/search?${this.buildQueryFromModels()}`)
+            fetch(`${process.env.VUE_APP_API_URL}/search?${this.buildQueryFromModels()}`)
+                .then(response => response.json())
+                .then(data => { this.$emit('resultsReceived', data.results, this.countries); })
+        },
+
+
+        buildQueryFromModels () {
+            let query = [];
             if (!this.allTimePeriods) {
-                query += `period_start=${this.periodStartModel}`;
-                query += `period_end=${this.periodEndModel}`;
+                const from = this.timePeriodModel[0];
+                const to = this.timePeriodModel[1];
+                query.push(`period_start=${from.getFullYear()}-${from.getMonth()+1}-${from.getDate()}`);
+                query.push(`period_end=${to.getFullYear()}-${to.getMonth()+1}-${to.getDate()}`);
             }
             if (this.countryModel !== 'all') {
-                query += `country=${this.countryModel}`;
+                query.push(`country=${this.countryModel}`);
             }
             this.fields.forEach(field => {
                 if (field.active) {
-                    // TODO
-                    query += `${field.code}_start=`;
-                    query += `${field.code}_end=`;
+                    query.push(`${field.code}_start=${field.minRangeModel}`);
+                    query.push(`${field.code}_end=${field.maxRangeModel}`);
                 }
             });
-            fetch(`${process.env.VUE_APP_API_URL}/search?${query}`)
-                .then(response => response.json())
-                .then(data => { this.$emit('resultsReceived', data.results); })
+            return query.join('&');
         }
 
     },
@@ -276,8 +314,9 @@ export default {
 @import '@/assets/less/setup';
 
 .form {
-    width: 580px;
-    max-width: 97%;
+    width: 30%;
+    min-width: 480px;
+    max-width: 95%;
     background: rgba(255, 255, 255, 0.1);
     box-shadow: 2px 2px 30px 0 rgba(0, 0, 0, 0.5);
     border-radius: 10px;
