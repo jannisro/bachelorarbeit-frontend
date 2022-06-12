@@ -61,6 +61,10 @@ export default {
                         callback: function(value) {
                             return value + ' MW';
                         }
+                    },
+                    grid: {
+                        drawBorder: false,
+                        color: context => context.tick.value == 0 ? "rgba(255, 255, 255, 0.6)" : "transparent"
                     }
                 },
                 priceYAxis: {
@@ -126,6 +130,10 @@ export default {
                         callback: function(value) {
                             return value + ' MW';
                         }
+                    },
+                    grid: {
+                        drawBorder: false,
+                        color: context => context.tick.value == 0 ? "rgba(255, 255, 255, 0.6)" : "transparent"
                     }
                 }
             }
@@ -156,6 +164,10 @@ export default {
                         callback: function(value) {
                             return value + '%';
                         }
+                    },
+                    grid: {
+                        drawBorder: false,
+                        color: context => context.tick.value == 0 ? "rgba(255, 255, 255, 0.6)" : "transparent"
                     }
                 }
             }
@@ -208,6 +220,10 @@ export default {
                         callback: function(value) {
                             return value + '°C';
                         }
+                    },
+                    grid: {
+                        drawBorder: false,
+                        color: context => context.tick.value == 0 ? "rgba(255, 255, 255, 0.6)" : "transparent"
                     }
                 }
             }
@@ -296,6 +312,10 @@ export default {
                         callback: function(value) {
                             return value + ' MW';
                         }
+                    },
+                    grid: {
+                        drawBorder: false,
+                        color: context => context.tick.value == 0 ? "rgba(255, 255, 255, 0.6)" : "transparent"
                     }
                 }
             }

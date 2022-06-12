@@ -130,7 +130,6 @@ export default {
 
 <style lang="less">
 @import '@/assets/less/setup';
-@import '@/assets/less/utils';
 
 .data-control {
     width: 94%;
@@ -159,7 +158,7 @@ export default {
     }
 
     &__datepicker {
-        background-color: rgba(255, 255, 255, 0.06) !important;
+        background-color: fade(@light, 6%) !important;
         font-size: 1.34rem !important;
         border: none !important;
         border-radius: 10px !important;

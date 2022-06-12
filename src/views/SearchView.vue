@@ -4,16 +4,20 @@
     <div class="search">
         <SearchForm @searchStarted="startSearch" @resultsReceived="renderResults" />
         
-        <div class="search__result" v-if="searchOngoing || results.length > 0 || error">
+        <div class="search__result" v-if="searchOngoing || searchCompleted || error">
 
 
-            <h2 class="search__headline" v-if="error">
+            <h2 class="text-center" v-if="error">
                 A server error occurred, please try to search again!
             </h2>
 
-            <h2 class="search__headline">Results</h2>
+            <h2 class="text-center" v-if="!error">Results</h2>
 
             <LoadingSpinner v-if="searchOngoing" />
+
+            <p v-if="!searchOngoing && results.length === 0" class="text-center">
+                No results found
+            </p>
 
             <div class="search__result__list">
                 <router-link 
@@ -51,7 +55,8 @@ export default {
         return {
             results: [],
             error: false,
-            searchOngoing: false
+            searchOngoing: false,
+            searchCompleted: false
         }
     },
 
@@ -68,6 +73,7 @@ export default {
                 this.error = true;
             }
             this.searchOngoing = false;
+            this.searchCompleted = true;
         },
 
 
@@ -130,10 +136,6 @@ export default {
                 background: fade(@light, 20%);
             }
         }
-    }
-
-    &__headline {
-        text-align: center;
     }
 }
 

@@ -3,7 +3,7 @@
 
         <div class="form__head">
             <span></span>
-            <h2 class="form__headline">
+            <h2 class="text-center">
                 Search
             </h2>
             <SupportButton @supportButtonClicked="showSupportModal" />
@@ -65,11 +65,7 @@
                     class="form__group form__group--row" 
                     v-for="field in getFieldsByActivity(true)" 
                     :key="`active-${field.name}`">
-                    <button 
-                        class="form__round-button" 
-                        @click="setFieldActivity(field.code, false)" 
-                        :tooltip="`Remove ${field.name} from your search`"
-                    >
+                    <button class="form__round-button" @click="setFieldActivity(field.code, false)">
                         <img src="@/assets/img/close.svg" alt="Cross icon">
                     </button>
                     {{ field.name }}:
@@ -317,8 +313,8 @@ export default {
     width: 30%;
     min-width: 480px;
     max-width: 95%;
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 2px 2px 30px 0 rgba(0, 0, 0, 0.5);
+    background: fade(@light, 10%);
+    box-shadow: 2px 2px 30px 0 fade(#000, 60%);;
     border-radius: 10px;
     padding: 1.7rem 0;
     margin: 2rem;
@@ -334,7 +330,7 @@ export default {
     &__segment {
         width: 100%;
         padding: 1.8rem 3rem;
-        border-bottom: solid 1px rgba(255, 255, 255, 0.2);
+        border-bottom: solid 1px fade(@light, 20%);
 
         &:last-of-type {
             border-bottom: none;
@@ -349,10 +345,6 @@ export default {
             font-size: 1.1rem;
             cursor: default;
         }
-    }
-
-    &__headline {
-        text-align: center;
     }
 
     &__group {
@@ -387,7 +379,7 @@ export default {
     &__inline-control {
         background: transparent;
         border: none;
-        border-bottom: solid 2px rgba(255, 255, 255, 0.8);
+        border-bottom: solid 2px fade(@light, 80%);
         padding: 0.1rem 0rem 0.1rem 0.3rem;
         width: 4rem;
         color: #fff;

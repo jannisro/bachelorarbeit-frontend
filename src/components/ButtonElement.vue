@@ -1,7 +1,7 @@
 <template>
-    <a class="button" v-if="href">
+    <router-link :to="href" class="button"  v-if="href">
         <slot></slot>
-    </a>
+    </router-link>
     <button class="button" v-else>
         <slot></slot>
     </button>
@@ -27,6 +27,8 @@ export default {
     border: solid 2px @primary;
     border-radius: 100px;
     transition: all 250ms;
+    display: flex;
+    align-items: center;
 
     &:hover, &.router-link-active {
         background: fade(@primary, 20%);

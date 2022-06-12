@@ -6,10 +6,13 @@
             <SupportButton @supportButtonClicked="$emit('supportButtonClicked', id)" />
         </div>
 
-        <div class="chart-control" v-if="viewLoaded && preparedChartData">
-            <ButtonElement @click="toggleAllDatarows">
+        <div class="flex flex-column align-items-center" v-if="viewLoaded && preparedChartData">
+            <ButtonElement @click="toggleAllDatarows" :tooltip="`${allHidden ? 'Show' : 'Hide'} all datasets in the chart`">
                 {{ allHidden ? 'Show all' : 'Hide all' }}
             </ButtonElement>
+            <small class="mt-1">
+                Click on a name or color to hide/show this datasets
+            </small>
         </div>
 
         <canvas :id="id" :height="chartHeight" data-chart-canvas></canvas>
@@ -114,7 +117,8 @@ export default {
 .chart {
     width: 94%;
     margin: 0 0 4rem 3%;
-    background: rgba(255,255,255,0.06);
+    background: fade(@light, 6%);
+    box-shadow: 2px 2px 30px 0 fade(#000, 60%);
     padding: 2.1rem 1.8rem;
     border-radius: 20px;
 
@@ -135,10 +139,6 @@ export default {
 
     &__headline {
         margin-bottom: 1rem;
-        text-align: center;
-    }
-
-    &-control {
         text-align: center;
     }
 }

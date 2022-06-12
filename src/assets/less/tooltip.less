@@ -1,7 +1,7 @@
 // out: false
 
 tool-tip {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: fade(@dark, 90%);
     color: #fff;
     border-radius: 0.25rem;
     line-height: 24px;
@@ -9,7 +9,7 @@ tool-tip {
     padding: 0.5rem 0.9rem;
     font-size: 1rem;
     font-weight: 600;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 6px -1px fade(#000, 10%), 0 2px 4px -1px fade(#000, 6%);
     pointer-events: none;
     transform-origin: center;
 

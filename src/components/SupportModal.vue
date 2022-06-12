@@ -68,7 +68,7 @@ export default {
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0,0,0,0.7);
+        background: fade(#000, 70%);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -104,7 +104,7 @@ export default {
         margin-top: 2rem;
         margin-bottom: 2rem;
         line-height: 1.7;
-        color: rgba(0,0,0,.8);
+        color: fade(#000, 80%);
     }
 
     &__btn {
@@ -114,7 +114,7 @@ export default {
         padding-top: .5rem;
         padding-bottom: .5rem;
         background-color: #e6e6e6;
-        color: rgba(0,0,0,.8);
+        color: fade(#000, 80%);
         border-radius: .25rem;
         border-style: none;
         border-width: 0;

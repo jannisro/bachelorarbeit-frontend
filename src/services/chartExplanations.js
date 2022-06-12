@@ -142,9 +142,10 @@ export default {
             title: 'Historic Value Search',
             caption: 'Search for past days by specifying a set of attribute values to be matched. Additionally, you can define the country and a time period to be searched for.',
             bullets: [
-                'Search results are days which contain all of the passed parameters',
-                'The commercial/physical flow and the NTC are matched when at least one border relation of the chosen country matches the search',
-                'You can click on each search result to view all data of the respective day'
+                'Search results are days which contain the passed values',
+                'The commercial/physical flow and NTC are matched when an outgoing value matches the search',
+                'You can click on each search result to view all data of the respective day',
+                'Only the first 30 results are returned'
             ]
         }
     }

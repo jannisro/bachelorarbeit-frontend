@@ -11,10 +11,12 @@
         </nav>
 
         <nav class="header__nav"> 
-            <router-link to="/search" class="button header__search" :class="{ active: active === 'search' }">
+
+            <ButtonElement href="/search">
                 <img src="@/assets/img/search.svg" alt="Search icon">
                 Search
-            </router-link>
+            </ButtonElement>
+
             <select 
                     class="button header__country" 
                     v-if="countrySelectionVisible" 
@@ -27,6 +29,7 @@
                         {{ country.short_name }}
                 </option>
             </select>
+
         </nav>
 
     </header>
@@ -34,9 +37,14 @@
 
 <script>
 import urlBuilder from '@/services/urlBuilder.js';
+import ButtonElement from '@/components/ButtonElement.vue';
 
 export default {
     name: 'HeaderNavigation',
+
+    components: {
+        ButtonElement
+    },
 
     data () {
         return {
@@ -47,11 +55,11 @@ export default {
 
     props: {
         countrySelectionVisible: Boolean,
-        active: String,
         selectedCountry: String
     },
 
     methods: {
+
 
         redirectCountry () {
             let date = new Date();
@@ -104,10 +112,6 @@ export default {
         &:hover, &.router-link-active {
             color: @primary;
         }
-
-        &--active {
-            border-bottom: solid 1px;
-        }
     }
 
     &__nav {
@@ -122,6 +126,8 @@ export default {
     }
 
     &__country {
+        margin-left: 0.8rem;
+        
         option {
             background: @dark;
         }

@@ -214,7 +214,6 @@ export default {
         $route () {
             window.scrollTo(0, 0);
             this.viewLoaded = this.error = false;
-            this.validateAndRender()
         }
     }
 
@@ -223,6 +222,5 @@ export default {
 
 <style lang="less">
 @import '@/assets/less/setup';
-@import '@/assets/less/utils';
 @import '@/assets/less/tooltip';
 </style>

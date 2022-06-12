@@ -5,7 +5,7 @@
     <div class="indicator-wrapper" v-if="viewLoaded">
         <div class="indicator" v-for="(item, index) in items" :key="`indicator-${index}`">
             <p class="indicator__number" :class="getNumberColor(item.value)">
-                {{ parseFloat(item.value) >= 0 ? '+' : '-' }}{{ item.value }}{{ prefix }}
+                {{ parseFloat(item.value) >= 0 ? '+' : '' }}{{ item.value }}{{ prefix }}
             </p>
             <p class="indicator__name">
                 {{ item.name }}

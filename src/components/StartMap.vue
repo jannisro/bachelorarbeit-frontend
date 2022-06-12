@@ -128,7 +128,7 @@ export default {
     background: #fff;
     padding: 0.9rem 2rem;
     border-radius: 10px;
-    box-shadow: 2px 2px 20px 0.3px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 20px 0.3px fade(#000, 30%);
     position: absolute;
     top: 0;
     left: 0;
