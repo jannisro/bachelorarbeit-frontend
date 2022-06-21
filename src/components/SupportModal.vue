@@ -55,6 +55,7 @@ export default {
 @import '@/assets/less/setup';
 
 .modal {
+    z-index: 1000;
 
     ul li {
         list-style-position: inside;

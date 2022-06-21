@@ -148,6 +148,15 @@ export default {
                 'Only the first 30 results are returned'
             ]
         }
+    },
+
+
+    startMap () {
+        return {
+            title: 'XX',
+            caption: 'XX',
+            bullets: []
+        }
     }
 
 }
