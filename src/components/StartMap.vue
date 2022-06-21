@@ -4,17 +4,17 @@
     <div id="popup">
         <p><b>{{countryName }}</b></p>
         <div v-if="current && current.data[countryCode]">
-            <p v-if="!isNaN(Math.round(current.data[countryCode].net_position))">
-                <small>Net Position: {{ Math.round(current.data[countryCode].net_position) }}</small>
+            <p v-if="currentValue(countryCode, 'net_position')">
+                <small>Net Position: {{ currentValue(countryCode, 'net_position') }} MW</small>
             </p>
-            <p v-if="!isNaN(Math.round(current.data[countryCode].wind))">
-                <small>Wind Speed: {{ Math.round(current.data[countryCode].wind) }} m/s</small>
+            <p v-if="currentValue(countryCode, 'wind')">
+                <small>Wind Speed: {{ currentValue(countryCode, 'wind') }} m/s</small>
             </p>
-            <p v-if="!isNaN(Math.round(current.data[countryCode].clouds))">
-                <small>Cloudiness: {{ Math.round(current.data[countryCode].clouds) }}%</small>
+            <p v-if="currentValue(countryCode, 'clouds')">
+                <small>Cloudiness: {{ currentValue(countryCode, 'clouds') }}%</small>
             </p>
-            <p v-if="!isNaN(Math.round(current.data[countryCode].temperature))">
-                <small>Temperature: {{ Math.round(current.data[countryCode].temperature) }}°C</small>
+            <p v-if="currentValue(countryCode, 'temperature')">
+                <small>Temperature: {{ currentValue(countryCode, 'temperature') }}°C</small>
             </p>
         </div>
     </div>
@@ -111,8 +111,8 @@ export default {
                     }
                     if (!isNaN(data[code].wind) && !isNaN(data[code].clouds)) {
                         html += `<div class="flex align-items-center">
-                            <img src='/weather-icons/${this.windIconName(data[code].wind)}' class="wind-icon">
-                            <img src='/weather-icons/${this.cloudIconName(data[code].clouds)}' class="cloud-icon">
+                            <img src='/weather-icons/${this.windIconName(code)}' class="wind-icon">
+                            <img src='/weather-icons/${this.cloudIconName(code)}' class="cloud-icon">
                         </div>`;
                     }
                     this.displayMapOverlay(countryCoords[code], html, map);
@@ -127,14 +127,14 @@ export default {
         },
 
 
-        windIconName (windSpeed) {
-            if (parseFloat(windSpeed) <= 2) {
+        windIconName (countryCode) {
+            if (this.currentValue(countryCode, 'wind') <= 2) {
                 return 'windmill-1.svg';
             }
-            else if (parseFloat(windSpeed) <= 6) {
+            else if (this.currentValue(countryCode, 'wind') <= 6) {
                 return 'windmill-2.svg';
             }
-            else if (parseFloat(windSpeed) <= 10) {
+            else if (this.currentValue(countryCode, 'wind') <= 10) {
                 return 'windmill-3.svg';
             }
             else {
@@ -143,14 +143,14 @@ export default {
         },
 
 
-        cloudIconName (cloudiness) {
-            if (parseFloat(cloudiness) <= 25) {
+        cloudIconName (countryCode) {
+            if (this.currentValue(countryCode, 'clouds') <= 25) {
                 return 'sunny.svg';
             }
-            else if (parseFloat(cloudiness) <= 50) {
+            else if (this.currentValue(countryCode, 'clouds') <= 50) {
                 return 'partly_sunny.svg';
             }
-            else if (parseFloat(cloudiness) <= 75) {
+            else if (this.currentValue(countryCode, 'clouds') <= 75) {
                 return 'partly_cloudy.svg';
             }
             else {
@@ -249,6 +249,14 @@ export default {
 
         showSupportModal () {
             this.$refs.supportModal.show(chartExplanations.startMap())
+        },
+
+
+        currentValue (countryCode, fieldName) {
+            if (this.current && 'data' in this.current && countryCode in this.current.data) {
+                return Math.round(this.current.data[countryCode][fieldName]);
+            }
+            return false;
         }
     },
 
