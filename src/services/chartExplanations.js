@@ -154,8 +154,9 @@ export default {
     startMap () {
         return {
             title: 'Geographical Overview',
-            caption: 'This map shows all available countries and an overview of their current weather and electricity situation.',
+            caption: 'This map shows all available countries and an overview of their weather and electricity situation from yesterday.',
             bullets: [
+                'All data shown is from yesterday at the current time',
                 'Click on a country to view all detailed data',
                 'The green/red number on each country represents the electricity net position (difference between generation and load)',
                 'The wind rotor indicates the wind average wind speed of each country',

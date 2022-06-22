@@ -94,6 +94,11 @@ export default {
                 });
                 window.setTimeout(() => {this.updateLocked = false;}, 1500)
             }
+        },
+
+
+        setTimeOffset (offset) {
+            alert(offset);
         }
 
 

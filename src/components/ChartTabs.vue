@@ -50,9 +50,15 @@ export default {
 
 
         render (chartData) {
-            let app = this;
             this.items.forEach(item => {
-                app.$refs[item.id][0].render(chartData)
+                this.$refs[item.id][0].render(chartData)
+            });
+        },
+
+
+        setTimeOffset (offset) {
+            this.items.forEach(item => {
+                this.$refs[item.id][0].setTimeOffset(offset)
             });
         }
     },

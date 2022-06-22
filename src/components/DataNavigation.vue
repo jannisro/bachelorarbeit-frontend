@@ -1,6 +1,10 @@
 <template>
  <nav class="data-control">
+
+    <!-- Datepicker and Timezone -->
     <div class="flex align-items-center">
+
+        <!-- Datepicker -->
         <router-link :to="previousUrl" class="data-control__arrow" :tooltip="`Go to previous ${periodName}`">
             <img src="@/assets/img/left.svg" alt="Previous">
         </router-link>
@@ -19,9 +23,23 @@
         <router-link :to="nextUrl" class="data-control__arrow" :tooltip="`Go to next ${periodName}`">
             <img src="@/assets/img/right.svg" alt="Next">
         </router-link>
+
+        <!-- Timezone -->
+        <div class="ml-2" v-if="periodName === 'day'">
+            <span tooltip="All data is shown in this timezone">Timezone:</span>
+            <select class="data-control__select" v-model="selectedTimezoneIndex" @change="$emit('timezoneChanged', timezones[selectedTimezoneIndex].offset)">
+                <option v-for="(timezone, index) in timezones" :value="index" :key="index">
+                    {{ timezone.name }} ({{ localTime(currentTime, timezone.offset) }})
+                </option>
+            </select>
+        </div>
+
     </div>
+
+    <!-- Border relation and time period -->
     <div>
 
+        <!-- Border relation -->
         <select class="data-control__select" v-model="borderRelationModel" @change="redirectBorderRelation">
             <option :value="startCountry">
                 Nationwide
@@ -31,6 +49,7 @@
             </option>
         </select>
 
+        <!-- Time period -->
         <select class="data-control__select" v-model="periodNameModel" @change="redirectDataView">
             <option value="day">
                 Daily
@@ -54,6 +73,7 @@ import '@vuepic/vue-datepicker/dist/main.css';
 
 export default {
     name: 'DataNavigation',
+    emits: ['timezoneChanged'],
 
     components: { Datepicker },
 
@@ -64,7 +84,15 @@ export default {
             endCountry: null, // Code of the target country if existing
             borderRelationModel: null, // targetCountry
             periodNameModel: '', // same as props.periodName
-            dateModel: null // same as props.date
+            dateModel: null, // same as props.date
+            timezones: [
+                { name: 'UTC/GMT', offset: 0 },
+                { name: 'UTC+1/CET/WEST', offset: 1 },
+                { name: 'UTC+2/CEST/EET', offset: 2 },
+                { name: 'UTC+3/EEST/TRT', offset: 3 }
+            ],
+            selectedTimezoneIndex: 0, // UTC, CEST, CET, EEST, ...
+            currentTime: new Date() // Refreshs every 15sec
         };
     },
 
@@ -74,7 +102,7 @@ export default {
         date: String, // 2022-01-01, ...
         periodDisplayName: String, // January 2022, Week 42/2022, ...
         previousUrl: String, // http://localhost/...
-        nextUrl: String // http://localhost/...
+        nextUrl: String, // http://localhost/...
     },
 
     methods: {
@@ -105,6 +133,14 @@ export default {
                     )
                 );
             }
+        },
+
+
+        localTime (currentTime, offset) {
+            // create Date object for current location
+            let utc = currentTime.getTime() + (currentTime.getTimezoneOffset() * 60000);
+            let localDate = new Date(utc + (3600000*offset));
+            return `${localDate.getHours()}:${localDate.getMinutes()}`;
         }
 
     },
@@ -112,6 +148,8 @@ export default {
     mounted () {
         this.periodNameModel = this.periodName;
         this.dateModel = this.date;
+        window.setInterval(() => { this.currentTime = new Date() }, 10000);
+
         if (this.countryCodes.length === 1) {
             this.startCountry = this.borderRelationModel = this.countryCodes[0];
         }
@@ -120,6 +158,7 @@ export default {
             this.endCountry = this.countryCodes[1];
             this.borderRelationModel = this.countryCodes[1];
         }
+        
         fetch(`${process.env.VUE_APP_API_URL}/country/${this.countryCodes[0]}/borders`)
             .then(response => response.json())
             .then(data => { this.borders = data.borders });

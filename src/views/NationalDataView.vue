@@ -18,7 +18,8 @@
         :date="$route.params.date"
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
-        :nextUrl="nextStepUrl" />
+        :nextUrl="nextStepUrl"
+        @timezoneChanged="changeTimezone" />
 
     <BarChart
         headline="Primary Energy Data" 
@@ -146,7 +147,7 @@ export default {
             this.$refs.primaryEnergyChart.render(this.electricityData);
             if (this.$route.params.timePeriodName === 'day') {
                 this.$refs.generationChart.render(this.electricityData);
-            }
+            } 
             this.$refs.secondaryEnergyChart.render(this.electricityData);
             this.$refs.weatherChartTabs.render(this.weatherData);
             this.$refs.indicators.render(indicatorBuilder.primaryEnergyIndicators(this.electricityData));
@@ -194,6 +195,16 @@ export default {
                 this.$route.params.timePeriodName,
                 date
             );
+        },
+
+
+        changeTimezone (hourOffset) {
+            const charts = ['primaryEnergyChart', 'secondaryEnergyChart', 'generationChart', 'weatherChartTabs'];
+            charts.forEach(chart => {
+                if (this.$refs[chart]) {
+                    this.$refs[chart].setTimeOffset(hourOffset);
+                } 
+            });
         }
 
     },
