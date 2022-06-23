@@ -18,7 +18,8 @@
         :date="$route.params.date"
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
-        :nextUrl="nextStepUrl" />
+        :nextUrl="nextStepUrl"
+        @timezoneChanged="changeTimezone" />
 
     <BarChart
         :headline="`Border Crossing ${startCountryCode} &#129042; ${endCountryCode}`" 
@@ -50,6 +51,7 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import urlBuilder from '@/services/urlBuilder'
 import SupportModal from '@/components/SupportModal.vue'
 import chartExplanations from '@/services/chartExplanations'
+import ButtonElement from '@/components/ButtonElement.vue'
 
 export default {
     name: 'InternationalDataView',
@@ -75,7 +77,8 @@ export default {
         BarChart,
         //IndicatorElement,
         LoadingSpinner,
-        SupportModal
+        SupportModal,
+        ButtonElement
     },
 
     methods: {
@@ -171,6 +174,14 @@ export default {
                 this.$route.params.timePeriodName,
                 date
             );
+        },
+
+
+        changeTimezone (hourOffset) {
+            const charts = ['primaryBorderCrossingData', 'reversedBorderCrossingData'];
+            charts.forEach(chart => {
+                this.$refs[chart].setTimeOffset(hourOffset);
+            });
         }
 
     },

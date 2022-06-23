@@ -87,9 +87,9 @@ export default {
             dateModel: null, // same as props.date
             timezones: [
                 { name: 'UTC/GMT', offset: 0 },
-                { name: 'UTC+1/CET/WEST', offset: 1 },
-                { name: 'UTC+2/CEST/EET', offset: 2 },
-                { name: 'UTC+3/EEST/TRT', offset: 3 }
+                { name: 'UTC+1', offset: 1 },
+                { name: 'UTC+2', offset: 2 },
+                { name: 'UTC+3', offset: 3 }
             ],
             selectedTimezoneIndex: 0, // UTC, CEST, CET, EEST, ...
             currentTime: new Date() // Refreshs every 15sec
@@ -140,7 +140,7 @@ export default {
             // create Date object for current location
             let utc = currentTime.getTime() + (currentTime.getTimezoneOffset() * 60000);
             let localDate = new Date(utc + (3600000*offset));
-            return `${localDate.getHours()}:${localDate.getMinutes()}`;
+            return `${localDate.getHours().toString().padStart(2, '0')}:${localDate.getMinutes().toString().padStart(2, '0')}`;
         }
 
     },

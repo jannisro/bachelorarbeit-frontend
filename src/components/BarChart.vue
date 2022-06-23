@@ -15,7 +15,7 @@
             </small>
         </div>
 
-        <canvas :id="id" :height="chartHeight" data-chart-canvas></canvas>
+        <canvas :id="id" :height="chartHeight"></canvas>
 
     </div>
 </template>
@@ -38,7 +38,7 @@ export default {
             chartHeight: null,
             preparedChartData: {},
             allHidden: false,
-            updateLocked: false
+            updateLocked: false,
         }
     },
 
@@ -98,7 +98,21 @@ export default {
 
 
         setTimeOffset (offset) {
-            alert(offset);
+            this.preparedChartData.labels = this.getTimeLabels(offset);
+            this.updateChart();
+        },
+
+
+        getTimeLabels (offset) {
+            let labels = [];
+            for (let hour = 0; hour < 24; hour++) {
+                let finalHour = hour + offset;
+                if (finalHour > 24) {
+                    finalHour -= 24;
+                }
+                labels.push(finalHour.toString().padStart(2, '0') + ':00');
+            }
+            return labels;
         }
 
 
