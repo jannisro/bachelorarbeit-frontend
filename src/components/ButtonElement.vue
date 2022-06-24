@@ -1,17 +1,26 @@
 <template>
-    <router-link :to="href" class="button"  v-if="href">
+
+    <router-link :to="href" class="button" :class="{ 'button--large': large }"  v-if="href">
         <slot></slot>
     </router-link>
-    <button class="button" v-else>
+
+    <a :href="rawHref" class="button" :class="{ 'button--large': large }"  v-else-if="rawHref">
+        <slot></slot>
+    </a>
+
+    <button class="button" :class="{ 'button--large': large }" v-else>
         <slot></slot>
     </button>
+
 </template>
 
 <script>
 export default {
     name: 'ButtonElement',
     props: {
-        href: String
+        href: String,
+        rawHref: String,
+        large: Boolean
     }
 }
 </script>
@@ -33,6 +42,11 @@ export default {
     &:hover, &.router-link-active {
         background: fade(@primary, 20%);
         color: @light;
+    }
+
+    &--large {
+        padding: 0.7rem 3rem;
+        font-size: 1.04rem;
     }
 
     img {

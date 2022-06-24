@@ -19,14 +19,16 @@
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
         :nextUrl="nextStepUrl"
-        @timezoneChanged="changeTimezone" />
+        @timezoneChanged="changeTimezone" 
+    />
 
     <BarChart
         headline="Primary Energy Data" 
         id="primaryEnergyData"
         ref="primaryEnergyChart"
         :viewLoaded="viewLoaded"
-        @supportButtonClicked="showSupportModal" />
+        @supportButtonClicked="showSupportModal" 
+    />
 
     <BarChart
         headline="Generation per Production Type" 
@@ -34,33 +36,49 @@
         ref="generationChart"
         :viewLoaded="viewLoaded"
         @supportButtonClicked="showSupportModal"
-        v-if="$route.params.timePeriodName === 'day'" />
+        v-if="$route.params.timePeriodName === 'day'" 
+    />
 
     <BarChart
         headline="Commercial/Physical Exchange" 
         id="secondaryEnergyData"
         ref="secondaryEnergyChart"
         :viewLoaded="viewLoaded"
-        @supportButtonClicked="showSupportModal" />
+        @supportButtonClicked="showSupportModal" 
+    />
 
     <IndicatorList 
-            prefix="%" 
-            :colorThresholds="[10, 30]" 
-            ref="indicators" 
-            :viewLoaded="viewLoaded"
-            @supportButtonClicked="showSupportModal('energyIndicators')" />
+        prefix="%" 
+        :colorThresholds="[10, 30]" 
+        ref="indicators" 
+        :viewLoaded="viewLoaded"
+        @supportButtonClicked="showSupportModal('energyIndicators')" 
+    />
 
     <ChartTabs 
-            ref="weatherChartTabs" 
-            @supportButtonClicked="showSupportModal" 
-            :viewLoaded="viewLoaded" :items="[
-                {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from overall mean'}, 
-                {id: 'clouds', title: 'Clouds', headline: 'Relative cloudiness per weather station'}, 
-                {id: 'temperature', title: 'Temperature', headline: 'Temperature per weather station'}, 
-                {id: 'wind', title: 'Wind', headline: 'Wind per weather station'}, 
-                {id: 'rain', title: 'Rain', headline: 'Rain per weather station'}, 
-                {id: 'snow', title: 'Snow', headline: 'Snow per weather station'}
-            ]" />
+        ref="weatherChartTabs" 
+        @supportButtonClicked="showSupportModal" 
+        :viewLoaded="viewLoaded" :items="[
+            {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from overall mean'}, 
+            {id: 'clouds', title: 'Clouds', headline: 'Relative cloudiness per weather station'}, 
+            {id: 'temperature', title: 'Temperature', headline: 'Temperature per weather station'}, 
+            {id: 'wind', title: 'Wind', headline: 'Wind per weather station'}, 
+            {id: 'rain', title: 'Rain', headline: 'Rain per weather station'}, 
+            {id: 'snow', title: 'Snow', headline: 'Snow per weather station'}
+            ]" 
+    />
+        
+
+    <div v-if="viewLoaded" class="flex justify-content-center mt-3 mb-3">
+        <ButtonElement :large="true" :rawHref="exportUrl('electricity')">
+            Export Energy Data
+        </ButtonElement>
+        
+        <ButtonElement :large="true" class="ml-2" :rawHref="exportUrl('electricity')">
+            Export Weather Data
+        </ButtonElement>
+    </div>
+    
 
     <SupportModal ref="supportModal" />
 
@@ -78,7 +96,6 @@ import urlBuilder from '@/services/urlBuilder'
 import SupportModal from '@/components/SupportModal.vue'
 import'tooltipper/tooltipper'
 import chartExplanations from '@/services/chartExplanations'
-import indicatorBuilder from '@/services/indicatorBuilder'
 import ButtonElement from '@/components/ButtonElement.vue'
 
 export default {
@@ -150,7 +167,7 @@ export default {
             } 
             this.$refs.secondaryEnergyChart.render(this.electricityData);
             this.$refs.weatherChartTabs.render(this.weatherData);
-            this.$refs.indicators.render(indicatorBuilder.primaryEnergyIndicators(this.electricityData));
+            this.$refs.indicators.render(this.electricityData.mean_values);
             console.log(`Completed rendering in ${Date.now() - start} milliseconds`);
         },
 
@@ -205,6 +222,14 @@ export default {
                     this.$refs[chart].setTimeOffset(hourOffset);
                 } 
             });
+        },
+
+
+        exportUrl (domain) {
+            const countryAndDate = `${this.$route.params.countryCode}/${this.$route.params.date}`;
+            return domain === 'electricity'
+                ? `${process.env.VUE_APP_API_URL}/electricity/export/national/${countryAndDate}`
+                : `${process.env.VUE_APP_API_URL}/weather/export/${countryAndDate}`;
         }
 
     },

@@ -35,6 +35,12 @@
         :viewLoaded="viewLoaded"
         @supportButtonClicked="showSupportModal" />
 
+    <div v-if="viewLoaded" class="flex justify-content-center mt-3 mb-3">
+        <ButtonElement :large="true" :rawHref="exportUrl()">
+            Export Energy Data
+        </ButtonElement>
+    </div>
+
     <!--<IndicatorElement :items="[]" />-->
 
     <SupportModal ref="supportModal" />
@@ -182,6 +188,12 @@ export default {
             charts.forEach(chart => {
                 this.$refs[chart].setTimeOffset(hourOffset);
             });
+        },
+
+        
+        exportUrl () {
+            const countryAndDate = `${this.$route.params.startCountryCode}/${this.$route.params.date}`;
+            return `${process.env.VUE_APP_API_URL}/electricity/export/international/${countryAndDate}`;
         }
 
     },
