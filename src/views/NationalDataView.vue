@@ -132,7 +132,7 @@ export default {
             const validCountry = validation.isValidCountry(this.$route.params.countryCode);
             const validPeriodName = validation.isValidPeriodName(this.$route.params.timePeriodName);
             const validDate = validation.isValidDate(this.$route.params.date);
-            (validCountry && validPeriodName && validDate) ? this.fetchAndOutputData() : this.$router.push('/');
+            (validCountry && validPeriodName && validDate) ? this.fetchAndOutputData() : this.viewLoaded=true;
         },
 
 
