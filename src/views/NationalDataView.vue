@@ -235,11 +235,12 @@ export default {
     },
 
 
-    /**
-     * Initial rendering after component mount
-     */
-    mounted () {
-        this.validateAndRender()
+    created () {
+        this.$watch(
+            () => this.$route.params,
+            () => { this.validateAndRender() },
+            { immediate: true }
+        )
     },
 
 
