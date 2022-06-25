@@ -128,10 +128,11 @@ export default {
     energyIndicators () {
         return {
             title: 'Energy Indicators',
-            caption: 'These numbers are displaying the percentual deviation of energy datapoints from the mean value.',
+            caption: 'These numbers are displaying the percentual deviation from a period\'s average',
             bullets: [
                 'Base value is the sum of an energy datapoint of the current time period',
-                'Compared value is the mean of this datapoint over the last 30 days'
+                'Compared value is the average value of this datapoint over the last time',
+                'Each number can be seen as a trend deviation and thus as a distinctiveness indicator'
             ]
         }
     },
@@ -143,7 +144,7 @@ export default {
             caption: 'Search for past days by specifying a set of attribute values to be matched. Additionally, you can define the country and a time period to be searched for.',
             bullets: [
                 'Search results are days which contain the passed values',
-                'The commercial/physical flow and NTC are matched when an outgoing value matches the search',
+                'The commercial/physical flow and NTC are matched when any outgoing/incoming value matches the search',
                 'You can click on each search result to view all data of the respective day',
                 'Only the first 30 results are returned'
             ]
@@ -154,14 +155,14 @@ export default {
     startMap () {
         return {
             title: 'Geographical Overview',
-            caption: 'This map shows all available countries and an overview of their weather and electricity situation from yesterday.',
+            caption: 'This map shows all available countries and their current state of net position, wind and cloudiness .',
             bullets: [
-                'All data shown is from yesterday at the current time',
-                'Click on a country to view all detailed data',
-                'The green/red number on each country represents the electricity net position (difference between generation and load)',
-                'The wind rotor indicates the wind average wind speed of each country',
+                'The time (UTC) of the shown data is displayed in the lower left corner',
+                'Click on a country to view all details and time series data',
+                'The number on each country represents the electricity net position',
+                'Average wind speed of a country is indicated by the rotating wind rotor',
                 'The sun/cloud icon indicates the average cloudiness of each country',
-                'Scroll in to view the weather icons and net positions of all countries'
+                'More countries are displayed when you zoom in'
             ]
         }
     }

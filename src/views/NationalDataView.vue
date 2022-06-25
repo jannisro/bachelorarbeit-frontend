@@ -59,7 +59,7 @@
         ref="weatherChartTabs" 
         @supportButtonClicked="showSupportModal" 
         :viewLoaded="viewLoaded" :items="[
-            {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from overall mean'}, 
+            {id: 'weatherOverview', title: 'Overall Deviation', headline: 'Relative deviation from average'}, 
             {id: 'clouds', title: 'Clouds', headline: 'Relative cloudiness per weather station'}, 
             {id: 'temperature', title: 'Temperature', headline: 'Temperature per weather station'}, 
             {id: 'wind', title: 'Wind', headline: 'Wind per weather station'}, 

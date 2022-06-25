@@ -128,13 +128,13 @@ export default {
 
 
         windIconName (countryCode) {
-            if (this.currentValue(countryCode, 'wind') <= 2) {
+            if (this.currentValue(countryCode, 'wind') <= 1.5) {
                 return 'windmill-1.svg';
             }
-            else if (this.currentValue(countryCode, 'wind') <= 6) {
+            else if (this.currentValue(countryCode, 'wind') <= 3.5) {
                 return 'windmill-2.svg';
             }
-            else if (this.currentValue(countryCode, 'wind') <= 10) {
+            else if (this.currentValue(countryCode, 'wind') <= 5.5) {
                 return 'windmill-3.svg';
             }
             else {
