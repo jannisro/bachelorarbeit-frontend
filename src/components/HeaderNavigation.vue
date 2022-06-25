@@ -5,9 +5,9 @@
             <router-link to="/" class="header__link">
                 Start
             </router-link>
-            <router-link to="/help" class="header__link">
+            <!--<router-link to="/help" class="header__link">
                 Help
-            </router-link>
+            </router-link>-->
         </nav>
 
         <nav class="header__nav"> 
