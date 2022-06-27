@@ -19,6 +19,13 @@
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
         :nextUrl="nextStepUrl"
+        :navigationSteps="[
+            { name: 'Generation', url: 'generation' },
+            { name: 'Electricity Exchange', url: 'exchange' },
+            { name: 'Electricity Indicators', url: 'indicators' },
+            { name: 'Weather Data', url: 'weather' },
+            { name: 'Export', url: 'export' }
+        ]"
         @timezoneChanged="changeTimezone" 
     />
 
@@ -30,6 +37,8 @@
         @supportButtonClicked="showSupportModal" 
     />
 
+
+    <a name="generation"></a>
     <BarChart
         headline="Generation per Production Type" 
         id="generationChart"
@@ -39,6 +48,8 @@
         v-if="$route.params.timePeriodName === 'day'" 
     />
 
+
+    <a name="exchange"></a>
     <BarChart
         headline="Commercial/Physical Exchange" 
         id="secondaryEnergyData"
@@ -47,6 +58,8 @@
         @supportButtonClicked="showSupportModal" 
     />
 
+    
+    <a name="indicators"></a>
     <IndicatorList 
         prefix="%" 
         :colorThresholds="[10, 30]" 
@@ -55,6 +68,8 @@
         @supportButtonClicked="showSupportModal('energyIndicators')" 
     />
 
+    
+    <a name="weather"></a>
     <ChartTabs 
         ref="weatherChartTabs" 
         @supportButtonClicked="showSupportModal" 
@@ -69,6 +84,8 @@
     />
         
 
+    
+    <a name="export"></a>
     <div v-if="viewLoaded" class="flex justify-content-center mt-3 mb-3">
         <ButtonElement :large="true" :rawHref="exportUrl('electricity')">
             Export Energy Data
@@ -241,17 +258,6 @@ export default {
             () => { this.validateAndRender() },
             { immediate: true }
         )
-    },
-
-
-    /**
-     * React on page transition
-     */
-    watch: {
-        $route () {
-            window.scrollTo(0, 0);
-            this.viewLoaded = this.error = false;
-        }
     }
 
 }

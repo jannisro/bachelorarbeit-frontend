@@ -27,7 +27,7 @@
         <!-- Timezone -->
         <div class="ml-2" v-if="periodName === 'day'">
             <span tooltip="All data is shown in this timezone">Timezone:</span>
-            <select class="data-control__select" v-model="selectedTimezoneIndex" @change="$emit('timezoneChanged', timezones[selectedTimezoneIndex].offset)">
+            <select class="data-control__select timezone" v-model="selectedTimezoneIndex" @change="$emit('timezoneChanged', timezones[selectedTimezoneIndex].offset)">
                 <option v-for="(timezone, index) in timezones" :value="index" :key="index">
                     {{ timezone.name }} ({{ localTime(currentTime, timezone.offset) }})
                 </option>
@@ -35,6 +35,15 @@
         </div>
 
     </div>
+
+
+    <!-- Page Sections -->
+    <div>
+        <a v-for="item in navigationSteps" :key="item.url" :href="`#${item.url}`" class="data-control__section-link">
+            {{ item.name }}
+        </a>
+    </div>
+
 
     <!-- Border relation and time period -->
     <div>
@@ -103,6 +112,7 @@ export default {
         periodDisplayName: String, // January 2022, Week 42/2022, ...
         previousUrl: String, // http://localhost/...
         nextUrl: String, // http://localhost/...
+        navigationSteps: Array // [ {name: X, url: Y}, ... ]
     },
 
     methods: {
@@ -198,7 +208,7 @@ export default {
 
     &__datepicker {
         background-color: fade(@light, 6%) !important;
-        font-size: 1.34rem !important;
+        font-size: 1.24rem !important;
         border: none !important;
         border-radius: 10px !important;
     }
@@ -208,7 +218,7 @@ export default {
         border: none;
         border-bottom: solid 1px @light;
         color: @light;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
         padding: 0.5rem 1rem;
         transition: all 250ms;
 
@@ -216,9 +226,28 @@ export default {
             background: @dark;
         }
 
+        &.timezone {
+            font-size: 0.95rem;
+            padding: 0.4rem 0.5rem;
+        }
+
         &:focus, &:hover {
             border-bottom: solid 1px @primary;
             background: fade(@light, 5%);
+        }
+    }
+
+    &__section-link {
+        text-decoration: none;
+        color: #fff;
+        padding: 0.3rem 0.7rem;
+        transition: all 250ms;
+        border-bottom: solid 2px @light;
+        font-size: 0.98rem;
+
+        &:hover {
+            background: fade(@primary, 10%);
+            border-bottom: solid 2px @primary;
         }
     }
 }

@@ -23,6 +23,7 @@ export default {
 html {
     background: @dark;
     color: @light;
+    scroll-behavior:smooth
 
     /** {
         color: @light;

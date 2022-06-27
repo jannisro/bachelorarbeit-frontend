@@ -19,8 +19,14 @@
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
         :nextUrl="nextStepUrl"
+        :navigationSteps="[
+            { name: 'Outgoing Flow', url: 'outgoing'},
+            { name: 'Incoming Flow', url: 'incoming'},
+            { name: 'Export', url: 'export'}
+        ]"
         @timezoneChanged="changeTimezone" />
 
+    <a name="outgoing"></a>
     <BarChart
         :headline="`Border Crossing ${startCountryCode} &#129042; ${endCountryCode}`" 
         id="primaryBorderCrossingData"
@@ -28,6 +34,7 @@
         :viewLoaded="viewLoaded"
         @supportButtonClicked="showSupportModal" />
 
+    <a name="incoming"></a>
     <BarChart
         :headline="`Border Crossing ${endCountryCode} &#129042; ${startCountryCode}`" 
         id="reversedBorderCrossingData"
@@ -35,6 +42,7 @@
         :viewLoaded="viewLoaded"
         @supportButtonClicked="showSupportModal" />
 
+    <a name="export"></a>
     <div v-if="viewLoaded" class="flex justify-content-center mt-3 mb-3">
         <ButtonElement :large="true" :rawHref="exportUrl()">
             Export Energy Data
