@@ -65,6 +65,7 @@
         :colorThresholds="[10, 30]" 
         ref="indicators" 
         :viewLoaded="viewLoaded"
+        headline="Electricity Indicators"
         @supportButtonClicked="showSupportModal('energyIndicators')" 
     />
 
@@ -233,12 +234,14 @@ export default {
 
 
         changeTimezone (hourOffset) {
+            document.querySelector('#app').style.visibility = 'hidden';
             const charts = ['primaryEnergyChart', 'secondaryEnergyChart', 'generationChart', 'weatherChartTabs'];
             charts.forEach(chart => {
                 if (this.$refs[chart]) {
                     this.$refs[chart].setTimeOffset(hourOffset);
                 } 
             });
+            window.setTimeout(() => { document.querySelector('#app').style.visibility = 'visible'; }, 300)
         },
 
 

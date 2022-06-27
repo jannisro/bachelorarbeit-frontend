@@ -1,5 +1,6 @@
 <template>
-    <div class="indicator-help" v-if="viewLoaded">
+    <div class="indicator-head" v-if="viewLoaded">
+        <h2>{{ headline }}</h2>
         <SupportButton @supportButtonClicked="$emit('supportButtonClicked')" />
     </div>
     <div class="indicator-wrapper" v-if="viewLoaded">
@@ -25,7 +26,8 @@ export default {
     props: {
         prefix: String, // Unit to attach to each value
         viewLoaded: Boolean, // Boolean to indicate when to show content
-        colorThresholds: Array // Thresholds where the color of indicators should change
+        colorThresholds: Array, // Thresholds where the color of indicators should change
+        headline: String
     },
 
     data () {
@@ -87,11 +89,12 @@ export default {
         margin: 0 3% 7rem 3%;
     }
 
-    &-help {
+    &-head {
         width: 96%;
         display: flex;
-        justify-content: flex-end;
-        margin-top: 4rem;
+        justify-content: space-between;
+        align-items: center;
+        margin: 4rem 3% 1rem 3%;
     }
 
     &__number {

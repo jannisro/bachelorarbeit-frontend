@@ -128,11 +128,12 @@ export default {
     energyIndicators () {
         return {
             title: 'Energy Indicators',
-            caption: 'These numbers are displaying the percentual deviation from a period\'s average',
+            caption: 'These numbers are displaying the percentual deviation of the current state from the average',
             bullets: [
-                'Base value is the sum of an energy datapoint of the current time period',
-                'Compared value is the average value of this datapoint over the last time',
-                'Each number can be seen as a trend deviation and thus as a distinctiveness indicator'
+                'Base value is the average of the current time period',
+                'Compared value is the average value of this datapoint over the recent time',
+                'Each number can be seen as a trend deviation and thus as a distinctiveness indicator',
+                'Example: An indicator with a value of 18% means this data point is 18% above it\'s average'
             ]
         }
     },

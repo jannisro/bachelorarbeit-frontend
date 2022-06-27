@@ -23,7 +23,7 @@
         <SupportButton @supportButtonClicked="showSupportModal" />
         <div id="currentDate">
             <span v-if="current && 'datetime' in current">
-                {{ current.datetime }}
+                Today, {{ utcToLocalTime(current.datetime) }}
             </span>
             <span v-else>
                 Loading...
@@ -257,6 +257,13 @@ export default {
                 return Math.round(this.current.data[countryCode][fieldName]);
             }
             return false;
+        },
+
+
+        utcToLocalTime (utcDate) {
+            let local = (new Date(utcDate));
+            local.setHours(local.getHours() - local.getTimezoneOffset() / 60);
+            return local.getHours() + ':' + local.getMinutes().toString().padStart(2, '0');
         }
     },
 
@@ -319,16 +326,16 @@ export default {
 .bottom-box {
     bottom: 0;
     left: 0;
-    margin: 0 0 1rem 1rem;
+    margin: 0 0 1.5rem 1.5rem;
     z-index: 10000;
     position: fixed;
 }
 
 #currentDate {
     background: @primary;
-    padding: 0.7rem 1.5rem;
+    padding: 0.9rem 1.7rem;
     border-radius: 10px;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #fff;
     margin-top: 1.4rem;
 }
