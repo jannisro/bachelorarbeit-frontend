@@ -99,6 +99,7 @@ export default {
 
 
         validateAndRender () {
+            this.viewLoaded = false;
             const validCountry1 = validation.isValidCountry(this.$route.params.startCountryCode);
             const validCountry2 = validation.isValidCountry(this.$route.params.endCountryCode);
             const validPeriodName = validation.isValidPeriodName(this.$route.params.timePeriodName);
@@ -207,24 +208,12 @@ export default {
     },
 
 
-    created () {
+    mounted () {
         this.$watch(
             () => this.$route.params,
             () => { this.validateAndRender() },
             { immediate: true }
         )
-    },
-
-
-    /**
-     * React on page transition
-     */
-    watch: {
-        $route () {
-            window.scrollTo(0, 0);
-            this.viewLoaded = this.error = false;
-            this.validateAndRender()
-        }
     }
 
 }

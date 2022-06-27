@@ -147,6 +147,7 @@ export default {
 
 
         validateAndRender () {
+            this.viewLoaded = false;
             const validCountry = validation.isValidCountry(this.$route.params.countryCode);
             const validPeriodName = validation.isValidPeriodName(this.$route.params.timePeriodName);
             const validDate = validation.isValidDate(this.$route.params.date);
@@ -255,7 +256,7 @@ export default {
     },
 
 
-    created () {
+    mounted () {
         this.$watch(
             () => this.$route.params,
             () => { this.validateAndRender() },

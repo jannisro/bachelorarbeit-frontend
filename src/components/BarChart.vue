@@ -37,6 +37,7 @@ export default {
             chart: null,
             chartHeight: null,
             preparedChartData: {},
+            chartOptions: null,
             allHidden: false,
             updateLocked: false,
         }
@@ -59,11 +60,16 @@ export default {
         render (rawChartData) {
             if (this.chart) this.chart.destroy();
             this.preparedChartData = chartData[this.id](rawChartData);
-            this.chart = new Chart(document.getElementById(this.id), {
-                data: this.preparedChartData,
-                options: chartOptions[this.id]()
-            });
-            this.resizeCharts();
+            if (document.getElementById(this.id) && document.getElementById(this.id).getContext) {
+                this.chart = new Chart(document.getElementById(this.id), {
+                    data: this.preparedChartData,
+                    options: chartOptions[this.id]()
+                });
+                this.resizeCharts();
+            }
+            else {
+                window.setTimeout(() => { this.render() }, 600);
+            }
         },
     
 

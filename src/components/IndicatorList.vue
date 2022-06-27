@@ -90,7 +90,7 @@ export default {
     }
 
     &-head {
-        width: 96%;
+        width: 94%;
         display: flex;
         justify-content: space-between;
         align-items: center;
