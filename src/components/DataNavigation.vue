@@ -39,9 +39,9 @@
 
     <!-- Page Sections -->
     <div>
-        <a v-for="item in navigationSteps" :key="item.url" :href="`#${item.url}`" class="data-control__section-link">
+        <button v-for="item in navigationSteps" :key="item.url" class="data-control__section-link" @click="scrollToSection(item.url)">
             {{ item.name }}
-        </a>
+        </button>
     </div>
 
 
@@ -151,6 +151,11 @@ export default {
             let utc = currentTime.getTime() + (currentTime.getTimezoneOffset() * 60000);
             let localDate = new Date(utc + (3600000*offset));
             return `${localDate.getHours().toString().padStart(2, '0')}:${localDate.getMinutes().toString().padStart(2, '0')}`;
+        },
+
+
+        scrollToSection (url) {
+            window.scrollTo(0, parseInt(document.querySelector(`[name="${url}"]`).offsetTop))
         }
 
     },
@@ -238,7 +243,9 @@ export default {
     }
 
     &__section-link {
-        text-decoration: none;
+        background: none;
+        border: none;
+        cursor: pointer;
         color: #fff;
         padding: 0.3rem 0.7rem;
         transition: all 250ms;
