@@ -98,7 +98,7 @@ export default {
                     data: this.preparedChartData,
                     options: chartOptions[this.id]()
                 });
-                window.setTimeout(() => {this.updateLocked = false;}, 1500)
+                window.setTimeout(() => {this.updateLocked = false;}, 1800)
             }
         },
 

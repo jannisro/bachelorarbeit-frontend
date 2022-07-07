@@ -1,15 +1,24 @@
 <template>
     <header class="header">
 
+        <!-- Back to Start -->
         <nav>
             <router-link to="/" class="header__link">
-                Start
+                &larr;
+                Back to Map
             </router-link>
-            <!--<router-link to="/help" class="header__link">
-                Help
-            </router-link>-->
         </nav>
 
+        
+        <!-- Page Sections -->
+        <div>
+            <button v-for="item in navigationSteps" :key="item.url" class="header__section-link" @click="scrollToSection(item.url)">
+                {{ item.name }}
+            </button>
+        </div>
+
+
+        <!-- Search and country selection -->
         <nav class="header__nav"> 
 
             <ButtonElement href="/search">
@@ -55,7 +64,8 @@ export default {
 
     props: {
         countrySelectionVisible: Boolean,
-        selectedCountry: String
+        selectedCountry: String,
+        navigationSteps: Array // [ {name: X, url: Y}, ... ]
     },
 
     methods: {
@@ -69,15 +79,21 @@ export default {
                 periodName = this.$route.params.timePeriodName
             }
             this.$router.push(urlBuilder.getDataUrl([this.selectedCountryCode], periodName, date))
+        },
+
+
+        scrollToSection (url) {
+            window.scrollTo(0, parseInt(document.querySelector(`[name="${url}"]`).offsetTop))
         }
 
     },
 
     mounted() {
         this.selectedCountryCode = this.selectedCountry
+
         fetch(`${process.env.VUE_APP_API_URL}/country`)
             .then(response => response.json())
-            .then(data => { this.countries = data.countries })
+            .then(data => { this.countries = data.countries });
     }
 
 }
@@ -93,6 +109,11 @@ export default {
     align-items: center;
     padding: 0.7rem 1rem;
     background: @dark;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 1px 1px 14px 0 fade(#000, 60%);
+    z-index: 10000;
 
     &--fixed {
         position: fixed;
@@ -130,6 +151,22 @@ export default {
         
         option {
             background: @dark;
+        }
+    }
+    
+    &__section-link {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #fff;
+        padding: 0.3rem 0.7rem;
+        transition: all 250ms;
+        border-bottom: solid 2px @light;
+        font-size: 0.98rem;
+
+        &:hover, &.active {
+            color: @primary;
+            border-bottom: solid 2px @primary;
         }
     }
 }

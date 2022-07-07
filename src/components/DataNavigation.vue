@@ -37,14 +37,6 @@
     </div>
 
 
-    <!-- Page Sections -->
-    <div>
-        <button v-for="item in navigationSteps" :key="item.url" class="data-control__section-link" @click="scrollToSection(item.url)">
-            {{ item.name }}
-        </button>
-    </div>
-
-
     <!-- Border relation and time period -->
     <div>
 
@@ -112,7 +104,6 @@ export default {
         periodDisplayName: String, // January 2022, Week 42/2022, ...
         previousUrl: String, // http://localhost/...
         nextUrl: String, // http://localhost/...
-        navigationSteps: Array // [ {name: X, url: Y}, ... ]
     },
 
     methods: {
@@ -151,11 +142,6 @@ export default {
             let utc = currentTime.getTime() + (currentTime.getTimezoneOffset() * 60000);
             let localDate = new Date(utc + (3600000*offset));
             return `${localDate.getHours().toString().padStart(2, '0')}:${localDate.getMinutes().toString().padStart(2, '0')}`;
-        },
-
-
-        scrollToSection (url) {
-            window.scrollTo(0, parseInt(document.querySelector(`[name="${url}"]`).offsetTop))
         }
 
     },
@@ -240,21 +226,9 @@ export default {
             border-bottom: solid 1px @primary;
             background: fade(@light, 5%);
         }
-    }
 
-    &__section-link {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #fff;
-        padding: 0.3rem 0.7rem;
-        transition: all 250ms;
-        border-bottom: solid 2px @light;
-        font-size: 0.98rem;
-
-        &:hover {
-            background: fade(@primary, 10%);
-            border-bottom: solid 2px @primary;
+        &:first-of-type {
+            margin-right: 3rem;
         }
     }
 }

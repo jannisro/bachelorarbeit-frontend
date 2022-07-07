@@ -1,6 +1,8 @@
 <template>
     <HeaderNavigation :country-selection-visible="false" />
 
+    <div style="margin-top: 6.5rem"></div>
+
     <div class="search">
         <SearchForm @searchStarted="startSearch" @resultsReceived="renderResults" />
         

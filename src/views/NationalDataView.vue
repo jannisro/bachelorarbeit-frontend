@@ -1,6 +1,18 @@
 <template>
 
-    <HeaderNavigation :countrySelectionVisible="true" :selectedCountry="$route.params.countryCode" />
+    <HeaderNavigation 
+        :countrySelectionVisible="true" 
+        :selectedCountry="$route.params.countryCode"
+        :navigationSteps="[
+            { name: 'Generation', url: 'generation' },
+            { name: 'Electricity Exchange', url: 'exchange' },
+            { name: 'Electricity Indicators', url: 'indicators' },
+            { name: 'Weather Data', url: 'weather' },
+            { name: 'Export', url: 'export' }
+        ]" 
+    />
+
+    <div style="margin-top: 6.5rem"></div>
 
     <div v-if="error" class="flex-column align-items-center">
         <h1 class="mt-5 mb-2">{{ error }}</h1>
@@ -19,13 +31,6 @@
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
         :nextUrl="nextStepUrl"
-        :navigationSteps="[
-            { name: 'Generation', url: 'generation' },
-            { name: 'Electricity Exchange', url: 'exchange' },
-            { name: 'Electricity Indicators', url: 'indicators' },
-            { name: 'Weather Data', url: 'weather' },
-            { name: 'Export', url: 'export' }
-        ]"
         @timezoneChanged="changeTimezone" 
     />
 

@@ -1,6 +1,16 @@
 <template>
 
-    <HeaderNavigation :countrySelectionVisible="true" :selectedCountry="$route.params.startCountryCode" />
+    <HeaderNavigation 
+        :countrySelectionVisible="true" 
+        :selectedCountry="$route.params.startCountryCode" 
+        :navigationSteps="[
+            { name: 'Outgoing Flow', url: 'outgoing'},
+            { name: 'Incoming Flow', url: 'incoming'},
+            { name: 'Export', url: 'export'}
+        ]"
+    />
+
+    <div style="margin-top: 6.5rem"></div>
 
     <div v-if="error" class="flex-column align-items-center">
         <h1 class="mt-5 mb-2">{{ error }}</h1>
@@ -19,11 +29,6 @@
         :periodDisplayName="periodDisplayName"
         :previousUrl="previousStepUrl"
         :nextUrl="nextStepUrl"
-        :navigationSteps="[
-            { name: 'Outgoing Flow', url: 'outgoing'},
-            { name: 'Incoming Flow', url: 'incoming'},
-            { name: 'Export', url: 'export'}
-        ]"
         @timezoneChanged="changeTimezone" />
 
     <a name="outgoing"></a>

@@ -374,6 +374,10 @@ export default {
         &:hover, &:focus {
             background: fade(@primary, 20%);
         }
+
+        option {
+            background: @dark;
+        }
     }
 
     &__inline-control {

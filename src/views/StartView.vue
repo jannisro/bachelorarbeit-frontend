@@ -1,7 +1,11 @@
 <template>
-    <HeaderNavigation :countrySelectionVisible="false" />
     
     <div id="mapContainer"></div>
+
+    <ButtonElement href="/search" class="search-button" :large="true">
+        <img src="@/assets/img/search.svg" alt="Search icon">
+        Search
+    </ButtonElement>
 
     <div id="popup">
         <p><b>{{countryName }}</b></p>
@@ -38,15 +42,15 @@
 </template>
 
 <script>
-import HeaderNavigation from '@/components/HeaderNavigation.vue'
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 import geoJson from "@/assets/countries.geo.json"
 import countryCoords from '@/assets/countries.coords.json'
 import urlBuilder from "@/services/urlBuilder"
+import chartExplanations from "@/services/chartExplanations"
 import SupportButton from "@/components/SupportButton.vue"
 import SupportModal from "@/components/SupportModal.vue"
-import chartExplanations from "@/services/chartExplanations"
+import ButtonElement from "@/components/ButtonElement.vue"
 
 export default {
     name: 'StartView',
@@ -54,16 +58,16 @@ export default {
     data() {
         return{
             center: [49.56, 12.261],
-            initialZoom: 5,
+            initialZoom: 6,
             countryName: '',
             countryCode: '',
             current: null
     }},
 
     components: {
-        HeaderNavigation,
         SupportButton,
-        SupportModal
+        SupportModal,
+        ButtonElement
     },
 
     methods: {
@@ -176,15 +180,26 @@ export default {
 
 
         manageTextLabels (map) {
+            document.querySelectorAll('.text-labels').forEach(item => { item.style.display = 'none'; })
+            // Zoom = 7 or higher => Display level 1/2/3/4
             if (map.getZoom() >= 7) {
-                document.querySelectorAll('.text-labels').forEach(item => { item.style.display = 'block'; })
+                document
+                    .querySelectorAll('.text-labels.level-1, .text-labels.level-2, .text-labels.level-3, .text-labels.level-4')
+                    .forEach(item => { item.style.display = 'block'; })
             }
-            else if (map.getZoom() >= 5) {
-                document.querySelectorAll('.text-labels.level-3').forEach(item => { item.style.display = 'none'; })
-                document.querySelectorAll('.text-labels.level-1, .text-labels.level-2').forEach(item => { item.style.display = 'block'; })
+            // Zoom = 6 => Display level 1/2/3
+            else if (map.getZoom() === 6) {
+                document
+                    .querySelectorAll('.text-labels.level-1, .text-labels.level-2, .text-labels.level-3')
+                    .forEach(item => { item.style.display = 'block'; })
             }
-            else {
-                document.querySelectorAll('.text-labels.level-2,.text-labels.level-3').forEach(item => { item.style.display = 'none'; })
+            // Zoom = 5 => Display level 1/2
+            else if (map.getZoom() === 5) {
+                document.querySelectorAll('.text-labels.level-1, .text-labels.level-2')
+                    .forEach(item => { item.style.display = 'block'; })
+            }
+            // Zoom = 4 => Display level 1
+            else if (map.getZoom() === 4) {
                 document.querySelectorAll('.text-labels.level-1').forEach(item => { item.style.display = 'block'; })
             }
         },
@@ -344,5 +359,18 @@ export default {
     font-size: 1.2rem;
     color: #fff;
     margin-top: 1.4rem;
+}
+
+.search-button {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    margin: 1rem 0 0 4rem;
+    background: fade(@dark, 90%) !important;
+
+    &:hover {
+        background: @dark !important;
+    }
 }
 </style>
